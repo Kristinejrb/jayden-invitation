@@ -1219,7 +1219,7 @@ async function loadInvitation(){
 invitation = data;
 // Check if already RSVP'd
 const { data: existing } = await supabaseClient
-    .from("rsvps")
+    .from("rsvp")
     .select("id")
     .eq("invitation_id", invitation.id)
     .maybeSingle();
@@ -1309,7 +1309,7 @@ if (!invitation) {
     if(stage === 'ready-to-submit'){
       const email = emailInput.value.trim();
 	const { data: existing } = await supabaseClient
-    .from("rsvps")
+    .from("rsvp")
     .select("id")
     .eq("invitation_id", invitation.id)
     .maybeSingle();
@@ -1337,7 +1337,7 @@ if(existing){
         if(!supabaseClient){
           throw new Error('Database not configured yet.');
         }
-        const { error } = await supabaseClient.from('rsvps').insert([payload]);
+        const { error } = await supabaseClient.from('rsvp').insert([payload]);
         if(error) throw error;
 
         rsvpBox.style.display = 'none';
