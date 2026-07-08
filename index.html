@@ -1221,7 +1221,7 @@ invitation = data;
 const { data: existing } = await supabaseClient
     .from("rsvp")
     .select("id")
-    .eq("invitation_id", invitation.id)
+    .eq("invite_code", inviteCode)
     .maybeSingle();
 
 if(existing){
@@ -1311,7 +1311,7 @@ if (!invitation) {
 	const { data: existing } = await supabaseClient
     .from("rsvp")
     .select("id")
-    .eq("invitation_id", invitation.id)
+    .eq("invite_code", inviteCode)
     .maybeSingle();
 
 if(existing){
@@ -1328,7 +1328,6 @@ if(existing){
       rsvpStatus.textContent = '';
 
       const payload = {
-    invitation_id: invitation.id,
     invite_code: inviteCode,
     email: email
 };
