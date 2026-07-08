@@ -1343,7 +1343,9 @@ if(existing){
         rsvpBox.style.display = 'none';
         rsvpSuccess.classList.add('show');
       }catch(err){
-        console.error(err);
+	    console.log("FULL ERROR:");
+	    console.log(JSON.stringify(err, null, 2));
+	    console.error(err);
         rsvpStatus.textContent = 'Something went wrong saving your response. Please try again in a moment.';
         rsvpStatus.className = 'rsvp-status error';
         rsvpBtn.disabled = false;
