@@ -1232,9 +1232,9 @@ if(existing){
     return;
 }
 document.getElementById("recipientName").textContent =
-    invitation.guest_name;
+    invitation.recipient_name;
 document.getElementById("recipientName").textContent =
-    `${invitation.guest_name} (${invitation.number_of_guests} Guest${invitation.number_of_guests > 1 ? 's' : ''})`;
+    `${invitation.recipient_name} (${invitation.allowed_guest} Guest${invitation.allowed_guest > 1 ? 's' : ''})`;
 
 // Enable RSVP button
 rsvpBtn.disabled = false;
