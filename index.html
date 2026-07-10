@@ -801,6 +801,138 @@
     opacity:0.6;
     cursor:not-allowed;
   }
+	/* =========================
+   DRESS CODE SECTION
+========================= */
+
+.dress-section{
+
+    padding:110px 24px;
+    background:linear-gradient(180deg,var(--cream),var(--paper));
+    text-align:center;
+    overflow:hidden;
+
+}
+
+.dress-section h2{
+
+    font-size:2.4rem;
+    color:var(--sage-deep);
+    margin-bottom:30px;
+
+}
+
+.dress-description{
+
+    max-width:700px;
+    margin:0 auto 60px;
+
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.25rem;
+    line-height:1.9;
+
+}
+
+.dress-palette{
+
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:32px;
+
+    margin-bottom:50px;
+
+}
+
+.dress-color{
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+}
+
+.dress-color span{
+
+    width:72px;
+    height:72px;
+    border-radius:50%;
+
+    border:4px solid white;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.08),
+        0 0 0 1px rgba(176,141,87,.2);
+
+    margin-bottom:14px;
+
+}
+
+.dress-color p{
+
+    font-size:.85rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+
+    color:var(--sage-deep);
+
+}
+
+.dress-note{
+
+    max-width:650px;
+    margin:auto;
+
+    padding:22px 28px;
+
+    background:white;
+
+    border:1px solid var(--gold-soft);
+
+    border-radius:18px;
+
+    font-size:1rem;
+
+    line-height:1.8;
+
+    color:var(--sage-deep);
+
+}
+
+@media(max-width:720px){
+
+.dress-section{
+
+    padding:90px 24px;
+
+}
+
+.dress-description{
+
+    font-size:1.1rem;
+
+}
+
+.dress-palette{
+
+    gap:20px;
+
+}
+
+.dress-color span{
+
+    width:58px;
+    height:58px;
+
+}
+
+.dress-note{
+
+    padding:18px;
+
+}
+
+}
 </style>
 </head>
 <body>
@@ -1086,6 +1218,60 @@
   <button class="decline-btn" id="declineBtn" style="display:none;">
       With regret, I won't be able to attend
   </button>
+</section>
+
+	<!-- ============ DRESS CODE ============ -->
+<section class="dress-section">
+
+    <p class="eyebrow">Dress Code</p>
+
+    <h2 class="serif">Garden Elegance</h2>
+
+    <p class="dress-description">
+        We kindly invite everyone to wear soft, elegant, and earthy tones as we celebrate
+        Jayden's First Birthday & Baptism. These colors will beautifully complement the
+        atmosphere of our special day.
+    </p>
+
+    <div class="dress-palette">
+
+        <div class="dress-color">
+            <span style="background:#F7F3EC;"></span>
+            <p>Cream</p>
+        </div>
+
+        <div class="dress-color">
+            <span style="background:#E9D8C9;"></span>
+            <p>Blush</p>
+        </div>
+
+        <div class="dress-color">
+            <span style="background:#D8C7A7;"></span>
+            <p>Champagne</p>
+        </div>
+
+        <div class="dress-color">
+            <span style="background:#C8B59C;"></span>
+            <p>Beige</p>
+        </div>
+
+        <div class="dress-color">
+            <span style="background:#B7C2A4;"></span>
+            <p>Sage</p>
+        </div>
+
+        <div class="dress-color">
+            <span style="background:#93A17E;"></span>
+            <p>Olive</p>
+        </div>
+
+    </div>
+
+    <p class="dress-note">
+        We kindly request guests to avoid bright neon colors, bold prints,
+        and all-black attire to help maintain the soft garden-inspired theme.
+    </p>
+
 </section>
 
 <!-- ============ FOOTER ============ -->
