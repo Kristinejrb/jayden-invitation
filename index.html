@@ -1217,24 +1217,23 @@ async function loadInvitation(){
     }
 
 invitation = data;
+
+// ALWAYS show the recipient name first
+document.getElementById("recipientName").textContent =
+    `${invitation.recipient_name} (${invitation.allowed_guest} Guest${invitation.allowed_guest > 1 ? "s" : ""})`;
+
 // Check if already RSVP'd
 const { data: existing } = await supabaseClient
-    .from("rsvp")
+    .from("rsvps")
     .select("id")
-    .eq("invite_code", inviteCode)
+    .eq("invitation_id", invitation.id)
     .maybeSingle();
 
-if(existing){
-
+if (existing) {
     document.querySelector(".rsvp-box").style.display = "none";
     document.getElementById("rsvpSuccess").classList.add("show");
-
     return;
 }
-document.getElementById("recipientName").textContent =
-    invitation.recipient_name;
-document.getElementById("recipientName").textContent =
-    `${invitation.recipient_name} (${invitation.allowed_guest} Guest${invitation.allowed_guest > 1 ? 's' : ''})`;
 
 // Enable RSVP button
 rsvpBtn.disabled = false;
