@@ -650,6 +650,33 @@
 
   .rsvp-btn:hover{transform:translateY(-3px); box-shadow:0 14px 36px rgba(0,0,0,0.28);}
   .rsvp-btn:disabled{opacity:0.55; cursor:not-allowed; transform:none;}
+	.decline-btn{
+
+    margin-top:18px;
+
+    background:transparent;
+
+    color:var(--gold-soft);
+
+    border:1px solid var(--gold-soft);
+
+    border-radius:40px;
+
+    padding:16px 32px;
+
+    cursor:pointer;
+
+    width:100%;
+
+    font-size:.85rem;
+
+}
+
+.decline-btn:hover{
+
+    background:rgba(255,255,255,.08);
+
+}
 
   .email-field{
     max-height:0;
@@ -713,6 +740,64 @@
   }
 
   :focus-visible{outline:2px solid var(--gold); outline-offset:3px;}
+.modal{
+
+display:none;
+
+position:fixed;
+
+inset:0;
+
+background:rgba(0,0,0,.6);
+
+justify-content:center;
+
+align-items:center;
+
+z-index:9999;
+
+}
+
+.modal.show{
+
+display:flex;
+
+}
+
+.modal-content{
+
+background:white;
+
+width:min(500px,90%);
+
+padding:35px;
+
+border-radius:20px;
+
+}
+
+.modal-content input,
+.modal-content textarea{
+
+width:100%;
+
+padding:14px;
+
+margin-top:15px;
+
+margin-bottom:15px;
+
+}
+
+.modal-buttons{
+
+display:flex;
+
+justify-content:flex-end;
+
+gap:10px;
+
+}
 </style>
 </head>
 <body>
@@ -994,7 +1079,9 @@
     <button class="rsvp-btn" id="rsvpBtn">Confirm My Attendance</button>
     <p class="rsvp-status" id="rsvpStatus"></p>
   </div>
-
+	<button class="decline-btn" id="declineBtn">
+	    With regret, I won't be able to attend
+	</button>
   <div class="rsvp-success" id="rsvpSuccess">
     <span class="script">Thank you!</span>
     <p>Your response has been received with so much gratitude. We'll be in touch soon with your table assignment — we truly can't wait to celebrate with you.</p>
@@ -1224,19 +1311,30 @@ document.getElementById("recipientName").textContent =
 
 // Check if already RSVP'd
 const { data: existing } = await supabaseClient
-    .from("rsvps")
+    .from("rsvp")
     .select("id")
-    .eq("invitation_id", invitation.id)
+    .eq("invite_code", inviteCode)
     .maybeSingle();
 
 if (existing) {
-    document.querySelector(".rsvp-box").style.display = "none";
-    document.getElementById("rsvpSuccess").classList.add("show");
-    return;
+document.querySelector(".rsvp-box").style.display = "none";
+document.getElementById("rsvpSuccess").classList.add("show");
+
+declineBtn.textContent =
+    "I'm so sorry, but I need to cancel my attendance";
+
+declineBtn.style.display = "inline-block";
+
+return;
 }
 
 // Enable RSVP button
 rsvpBtn.disabled = false;
+
+// Show the decline button
+declineBtn.style.display = "inline-block";
+declineBtn.textContent =
+    "I'm so sorry, I won't be able to attend";
 }
 
 if(inviteCode){
@@ -1266,6 +1364,13 @@ rsvpBtn.disabled = true;
   const rsvpStatus = document.getElementById('rsvpStatus');
   const rsvpBox = document.querySelector('.rsvp-box');
   const rsvpSuccess = document.getElementById('rsvpSuccess');
+
+ const declineBtn = document.getElementById("declineBtn");
+ const declineModal = document.getElementById("declineModal");
+ const cancelDecline = document.getElementById("cancelDecline");
+ const submitDecline = document.getElementById("submitDecline");
+ const declineEmail = document.getElementById("declineEmail");
+ const declineReason = document.getElementById("declineReason");
 
   let stage = 'initial'; // 'initial' -> 'awaiting-email' -> 'ready-to-submit'
 
@@ -1306,7 +1411,7 @@ if (!invitation) {
     }
 
     if(stage === 'ready-to-submit'){
-      const email = emailInput.value.trim();
+    const email = emailInput.value.trim();
 	const { data: existing } = await supabaseClient
     .from("rsvp")
     .select("id")
@@ -1326,20 +1431,132 @@ if(existing){
       rsvpBtn.textContent = 'Submitting...';
       rsvpStatus.textContent = '';
 
-      const payload = {
+    const payload = {
     invite_code: inviteCode,
-    email: email
+    email: email,
+	not_attending: false
 };
+
+    try{
+
+        const { data: existing } = await supabaseClient
+            .from("rsvp")
+            .select("id")
+            .eq("invite_code", inviteCode)
+            .maybeSingle();
+
+        if(existing){
+
+            const { error } = await supabaseClient
+                .from("rsvp")
+                .update({
+                    email: email,
+                    not_attending: false
+                })
+                .eq("invite_code", inviteCode);
+
+            if(error) throw error;
+
+        }else{
+
+            const { error } = await supabaseClient
+                .from("rsvp")
+                .insert([payload]);
+
+            if(error) throw error;
+
+        }
+
+        declineModal.classList.remove("show");
+
+        alert("Thank you for letting us know. We truly appreciate your response and will surely miss celebrating with you.");
+
+        location.reload();
+
+    }catch(err){
+
+        console.error(err);
+
+        alert("Something went wrong.");
+
+    }
+
+});
+	declineBtn.addEventListener("click", () => {
+
+    declineEmail.value = "";
+    declineReason.value = "";
+
+    declineModal.classList.add("show");
+});
+
+	cancelDecline.addEventListener("click", () => {
+
+    declineModal.classList.remove("show");
+
+});
+		submitDecline.addEventListener("click", async () => {
+
+    const email = declineEmail.value.trim();
+    const reason = declineReason.value.trim();
+
+    if(email === ""){
+        alert("Please enter your email.");
+        return;
+    }
+
+    if(reason === ""){
+        alert("Please let us know the reason.");
+        return;
+    }
 
       try{
         if(!supabaseClient){
           throw new Error('Database not configured yet.');
         }
-        const { error } = await supabaseClient.from('rsvp').insert([payload]);
+        const { data: existing } = await supabaseClient
+    .from("rsvp")
+    .select("id")
+    .eq("invite_code", inviteCode)
+    .maybeSingle();
+
+if(existing){
+
+    const { error } = await supabaseClient
+        .from("rsvp")
+        .update({
+            email: email,
+            reason: reason,
+            not_attending: true
+        })
+        .eq("invite_code", inviteCode);
+
+    if(error) throw error;
+
+}else{
+
+    const { error } = await supabaseClient
+        .from("rsvp")
+        .insert([{
+            invite_code: inviteCode,
+            email: email,
+            reason: reason,
+            not_attending: true
+        }]);
+
+    if(error) throw error;
+
+}
         if(error) throw error;
 
-        rsvpBox.style.display = 'none';
-        rsvpSuccess.classList.add('show');
+rsvpBox.style.display = 'none';
+
+rsvpSuccess.classList.add('show');
+
+declineBtn.style.display = "inline-block";
+
+declineBtn.textContent =
+"I'm so sorry, but I need to cancel my attendance";
       }catch(err){
 	    console.log("FULL ERROR:");
 	    console.log(JSON.stringify(err, null, 2));
@@ -1352,6 +1569,44 @@ if(existing){
     }
   });
 </script>
+<div id="declineModal" class="modal">
 
+    <div class="modal-content">
+
+        <h2>We're sorry you can't make it</h2>
+
+        <p style="margin-top:10px;margin-bottom:20px;">
+            We completely understand that plans can change.
+            Kindly let us know below so we can update our preparations.
+        </p>
+
+        <input
+            type="email"
+            id="declineEmail"
+            placeholder="Email Address">
+
+        <textarea
+            id="declineReason"
+            rows="5"
+            placeholder="Reason (optional but appreciated)"></textarea>
+
+        <div class="modal-buttons">
+
+            <button id="cancelDecline">
+                Close
+            </button>
+
+            <button id="submitDecline">
+                Submit
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
 </body>
 </html>
