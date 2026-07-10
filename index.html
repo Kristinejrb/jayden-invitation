@@ -38,7 +38,6 @@
   .serif{font-family:'Cormorant Garamond',serif;}
   a{text-decoration:none;color:inherit;}
 
-  /* ---------- decorative leaf corners (signature element, gently swaying) ---------- */
   .leaf-corner{
     position:absolute;
     width:290px;
@@ -90,7 +89,6 @@
     50%{ transform:rotate(1.5deg); }
   }
 
-  /* ---------- floating petals ---------- */
   .petal-layer{
     position:absolute;
     inset:0;
@@ -121,7 +119,6 @@
     .leaf-corner, .gold-dot, .petal, .scroll-cue, .rsvp-btn, .balloon-grp, .bear-grp{animation:none !important; transition:none !important;}
   }
 
-  /* ---------- HERO ---------- */
   .hero{
     position:relative;
     min-height:100vh;
@@ -251,7 +248,6 @@
     50%{transform:translateY(8px);}
   }
 
-  /* ---------- PHOTO SECTION ---------- */
   .photo-section{
     position:relative;
     padding:100px 24px;
@@ -295,7 +291,6 @@
     line-height:1.8;
   }
 
-  /* ---------- DETAILS ---------- */
   .details{
     position:relative;
     padding:110px 24px;
@@ -412,7 +407,7 @@
 
 .notes-track{
     display:flex;
-    gap:24px;                  /* Space between cards */
+    gap:24px;
     transition:transform .75s cubic-bezier(.4,0,.2,1);
     will-change:transform;
 }
@@ -520,8 +515,6 @@
 
 }
 
-/* ---------- INFORMATION SECTIONS ---------- */
-
 .info-section{
     padding:100px 24px;
     background:var(--paper);
@@ -576,7 +569,6 @@
 }
 
 }
-  /* ---------- COUNTDOWN ---------- */
   .countdown-wrap{margin-top:60px; position:relative; z-index:2;}
   .countdown{display:flex; justify-content:center; gap:18px; flex-wrap:wrap;}
 
@@ -591,7 +583,6 @@
   .count-box .num{font-family:'Cormorant Garamond',serif; font-size:2rem; display:block;}
   .count-box .label{font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; opacity:0.75;}
 
-  /* ---------- RSVP / INVITATION MESSAGE ---------- */
   .rsvp-section{
     position:relative;
     padding:120px 24px;
@@ -650,33 +641,25 @@
 
   .rsvp-btn:hover{transform:translateY(-3px); box-shadow:0 14px 36px rgba(0,0,0,0.28);}
   .rsvp-btn:disabled{opacity:0.55; cursor:not-allowed; transform:none;}
-	.decline-btn{
 
+  .decline-btn{
     margin-top:18px;
-
     background:transparent;
-
     color:var(--gold-soft);
-
     border:1px solid var(--gold-soft);
-
     border-radius:40px;
-
     padding:16px 32px;
-
     cursor:pointer;
-
     width:100%;
-
+    max-width:380px;
     font-size:.85rem;
+    position:relative;
+    z-index:2;
+  }
 
-}
-
-.decline-btn:hover{
-
+  .decline-btn:hover{
     background:rgba(255,255,255,.08);
-
-}
+  }
 
   .email-field{
     max-height:0;
@@ -726,7 +709,6 @@
   .rsvp-success .script{font-size:2.4rem; color:var(--gold-soft); display:block; margin-bottom:10px;}
   .rsvp-success p{font-family:'Cormorant Garamond',serif; font-size:1.15rem; line-height:1.8; color:#F1EAD9; max-width:460px; margin:0 auto;}
 
-  /* ---------- FOOTER ---------- */
   footer{padding:70px 24px 50px; text-align:center; background:var(--cream);}
   footer .script{font-size:2.4rem; color:var(--sage-deep); display:block; margin-bottom:14px;}
   footer .contact{font-size:0.9rem; color:var(--ink); margin-bottom:6px;}
@@ -740,64 +722,85 @@
   }
 
   :focus-visible{outline:2px solid var(--gold); outline-offset:3px;}
-.modal{
 
-display:none;
+  .modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.6);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    padding:20px;
+  }
 
-position:fixed;
+  .modal.show{
+    display:flex;
+  }
 
-inset:0;
+  .modal-content{
+    background:white;
+    width:min(500px,90%);
+    padding:35px;
+    border-radius:20px;
+    text-align:left;
+  }
 
-background:rgba(0,0,0,.6);
+  .modal-content h2{
+    font-family:'Cormorant Garamond',serif;
+    color:var(--sage-deep);
+    font-size:1.6rem;
+  }
 
-justify-content:center;
+  .modal-content p{
+    font-family:'Montserrat',sans-serif;
+    font-size:0.9rem;
+    color:var(--ink);
+    line-height:1.6;
+  }
 
-align-items:center;
+  .modal-content input,
+  .modal-content textarea{
+    width:100%;
+    padding:14px;
+    margin-top:15px;
+    margin-bottom:15px;
+    border:1px solid var(--gold-soft);
+    border-radius:10px;
+    font-family:'Montserrat',sans-serif;
+    font-size:0.9rem;
+    resize:vertical;
+  }
 
-z-index:9999;
+  .modal-buttons{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+  }
 
-}
+  .modal-buttons button{
+    border:none;
+    border-radius:40px;
+    padding:12px 26px;
+    font-size:0.85rem;
+    cursor:pointer;
+    font-family:'Montserrat',sans-serif;
+  }
 
-.modal.show{
+  #cancelDecline{
+    background:var(--cream);
+    color:var(--ink);
+  }
 
-display:flex;
+  #submitDecline{
+    background:var(--sage-deep);
+    color:var(--cream);
+  }
 
-}
-
-.modal-content{
-
-background:white;
-
-width:min(500px,90%);
-
-padding:35px;
-
-border-radius:20px;
-
-}
-
-.modal-content input,
-.modal-content textarea{
-
-width:100%;
-
-padding:14px;
-
-margin-top:15px;
-
-margin-bottom:15px;
-
-}
-
-.modal-buttons{
-
-display:flex;
-
-justify-content:flex-end;
-
-gap:10px;
-
-}
+  #submitDecline:disabled{
+    opacity:0.6;
+    cursor:not-allowed;
+  }
 </style>
 </head>
 <body>
@@ -822,23 +825,19 @@ gap:10px;
       </linearGradient>
     </defs>
 
-    <!-- greenery -->
     <path d="M35 30 C 60 55, 75 80, 70 115 C 100 102, 128 106, 148 134" stroke="#93A17E" stroke-width="2" opacity="0.5"/>
     <ellipse cx="48" cy="48" rx="15" ry="7.5" fill="#B7C2A4" transform="rotate(-40 48 48)" opacity="0.85"/>
     <ellipse cx="112" cy="112" rx="16" ry="8" fill="#5B6B4E" transform="rotate(30 112 112)" opacity="0.7"/>
 
-    <!-- balloon on a string -->
     <g class="balloon-grp">
       <path d="M90,72 C 86,92 80,104 72,120" stroke="#B08D57" stroke-width="1.2" fill="none" opacity="0.8"/>
       <ellipse cx="90" cy="56" rx="15" ry="19" fill="url(#balloonGrad-tl)" stroke="#B08D57" stroke-width="1"/>
       <path d="M83,73 L90,80 L97,73 Z" fill="#DCC7A0"/>
     </g>
 
-    <!-- flowers -->
     <use href="#flowerTpl-tl" transform="translate(56,54) scale(1.25)"/>
     <use href="#flowerTpl-tl" transform="translate(34,92) scale(0.8)"/>
 
-    <!-- teddy bear -->
     <g transform="translate(60,146)">
       <g class="bear-grp">
         <ellipse cx="-9" cy="26" rx="8" ry="6" fill="#C9A567" stroke="#5B6B4E" stroke-width="1"/>
@@ -876,7 +875,6 @@ gap:10px;
       </linearGradient>
     </defs>
 
-    <!-- rotate 180 around the viewBox center so this corner mirrors the top-left, without touching the sway animation -->
     <g transform="translate(220,0) scale(-1,1)">
       <path d="M35 30 C 60 55, 75 80, 70 115 C 100 102, 128 106, 148 134" stroke="#93A17E" stroke-width="2" opacity="0.5"/>
       <ellipse cx="48" cy="48" rx="15" ry="7.5" fill="#B7C2A4" transform="rotate(-40 48 48)" opacity="0.85"/>
@@ -1079,9 +1077,11 @@ gap:10px;
     <button class="rsvp-btn" id="rsvpBtn">Confirm My Attendance</button>
     <p class="rsvp-status" id="rsvpStatus"></p>
   </div>
-	<button class="decline-btn" id="declineBtn">
-	    With regret, I won't be able to attend
-	</button>
+
+  <button class="decline-btn" id="declineBtn" style="display:none;">
+      With regret, I won't be able to attend
+  </button>
+
   <div class="rsvp-success" id="rsvpSuccess">
     <span class="script">Thank you!</span>
     <p>Your response has been received with so much gratitude. We'll be in touch soon with your table assignment — we truly can't wait to celebrate with you.</p>
@@ -1096,517 +1096,378 @@ gap:10px;
   <p class="fine-print">We can't wait to celebrate this beautiful day with you.</p>
 </footer>
 
+<!-- ============ DECLINE / CANCEL MODAL ============ -->
+<div id="declineModal" class="modal">
+  <div class="modal-content">
+    <h2>We're sorry you can't make it</h2>
+    <p style="margin-top:10px;margin-bottom:20px;">
+        We completely understand that plans can change.
+        Kindly let us know below so we can update our preparations.
+    </p>
+
+    <input type="email" id="declineEmail" placeholder="Email Address">
+    <textarea id="declineReason" rows="5" placeholder="Reason (optional but appreciated)"></textarea>
+
+    <div class="modal-buttons">
+      <button id="cancelDecline" type="button">Close</button>
+      <button id="submitDecline" type="button">Submit</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ===========================================
    NOTES SLIDER
 =========================================== */
-
 const track=document.getElementById("notesTrack");
-
 const dots=document.querySelectorAll(".slider-dots .dot");
-
 const slider=document.querySelector(".notes-slider");
-
 let currentSlide=0;
-
 let autoSlide;
-
 let isPaused=false;
 
-
-
 function showSlide(index){
-
     currentSlide=index;
-
     track.style.transform=`translateX(-${index*100}%)`;
-
     dots.forEach(dot=>dot.classList.remove("active"));
-
     dots[index].classList.add("active");
-
 }
-
-
 
 function nextSlide(){
-
     if(isPaused) return;
-
     currentSlide++;
-
     if(currentSlide>=dots.length){
-
         currentSlide=0;
-
     }
-
     showSlide(currentSlide);
-
 }
-
-
 
 function startSlider(){
-
     clearInterval(autoSlide);
-
     autoSlide=setInterval(nextSlide,3000);
-
 }
 
-
-
 dots.forEach((dot,index)=>{
-
     dot.addEventListener("click",()=>{
-
         showSlide(index);
-
         startSlider();
-
     });
-
 });
 
-
-
-slider.addEventListener("mouseenter",()=>{
-
-    isPaused=true;
-
-});
-
-
-
-slider.addEventListener("mouseleave",()=>{
-
-    isPaused=false;
-
-});
-
-
-
-slider.addEventListener("touchstart",()=>{
-
-    isPaused=true;
-
-});
-
-
-
-slider.addEventListener("touchend",()=>{
-
-    setTimeout(()=>{
-
-        isPaused=false;
-
-    },4000);
-
-});
-
-
+slider.addEventListener("mouseenter",()=>{ isPaused=true; });
+slider.addEventListener("mouseleave",()=>{ isPaused=false; });
+slider.addEventListener("touchstart",()=>{ isPaused=true; });
+slider.addEventListener("touchend",()=>{ setTimeout(()=>{ isPaused=false; },4000); });
 
 startSlider();
-  /* =========================================================
-     RECIPIENT PERSONALIZATION
-     Each guest gets their own link by adding ?to=NAME to the URL, e.g.:
-     const recipient = params.get('invite');
-     ========================================================= */
-  const params = new URLSearchParams(window.location.search);
 
+/* =========================================================
+   RECIPIENT / INVITE CODE
+   ========================================================= */
+const params = new URLSearchParams(window.location.search);
 const inviteCode = params.get("code");
-
 let invitation = null;
+let rsvpRecord = null; // the guest's existing row in "rsvp", if any
 
-  /* =========================================================
-     COUNTDOWN
-     ========================================================= */
-  const targetDate = new Date("2026-10-13T11:00:00");
+/* =========================================================
+   COUNTDOWN
+   ========================================================= */
+const targetDate = new Date("2026-10-13T11:00:00");
 
-  function updateCountdown(){
-    const now = new Date();
-    const diff = targetDate - now;
-    const el = id => document.getElementById(id);
-    if(diff <= 0){
-      ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(id => el(id).textContent = '00');
+function updateCountdown(){
+  const now = new Date();
+  const diff = targetDate - now;
+  const el = id => document.getElementById(id);
+  if(diff <= 0){
+    ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(id => el(id).textContent = '00');
+    rsvpBtn.disabled = true;
+    rsvpBtn.textContent = "RSVP Closed";
+    return;
+  }
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hours = Math.floor((diff / (1000*60*60)) % 24);
+  const mins = Math.floor((diff / (1000*60)) % 60);
+  const secs = Math.floor((diff / 1000) % 60);
+  el('cd-days').textContent = String(days).padStart(2,'0');
+  el('cd-hours').textContent = String(hours).padStart(2,'0');
+  el('cd-mins').textContent = String(mins).padStart(2,'0');
+  el('cd-secs').textContent = String(secs).padStart(2,'0');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+/* =========================================================
+   FLOATING PETALS
+   ========================================================= */
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(!prefersReducedMotion){
+  const layer = document.getElementById('petalLayer');
+  const petalCount = 10;
+  for(let i=0; i<petalCount; i++){
+    const petal = document.createElement('div');
+    petal.className = 'petal';
+    petal.style.left = Math.random()*100 + '%';
+    const duration = 14 + Math.random()*10;
+    petal.style.animationDuration = duration + 's';
+    petal.style.animationDelay = (Math.random()*duration) + 's';
+    petal.style.width = petal.style.height = (10 + Math.random()*8) + 'px';
+    layer.appendChild(petal);
+  }
+}
+
+/* =========================================================
+   SUPABASE SETUP
+   ========================================================= */
+const SUPABASE_URL = "https://rprjwbdnzllmglwjbllg.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwcmp3YmRuemxsbWdsd2pibGxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1MDQxODEsImV4cCI6MjA5OTA4MDE4MX0.ZhIIU8_M_Ff1bzBePaC-3lkekdXEkJ727qjP5wWm3j0";
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* =========================================================
+   DOM REFERENCES
+   ========================================================= */
+const rsvpBtn = document.getElementById('rsvpBtn');
+const emailField = document.getElementById('emailField');
+const emailInput = document.getElementById('emailInput');
+const rsvpStatus = document.getElementById('rsvpStatus');
+const rsvpBox = document.querySelector('.rsvp-box');
+const rsvpSuccess = document.getElementById('rsvpSuccess');
+const declineBtn = document.getElementById('declineBtn');
+const declineModal = document.getElementById('declineModal');
+const cancelDecline = document.getElementById('cancelDecline');
+const submitDecline = document.getElementById('submitDecline');
+const declineEmail = document.getElementById('declineEmail');
+const declineReason = document.getElementById('declineReason');
+
 rsvpBtn.disabled = true;
-rsvpBtn.textContent = "RSVP Closed";
-      return;
-    }
-    const days = Math.floor(diff / (1000*60*60*24));
-    const hours = Math.floor((diff / (1000*60*60)) % 24);
-    const mins = Math.floor((diff / (1000*60)) % 60);
-    const secs = Math.floor((diff / 1000) % 60);
-    el('cd-days').textContent = String(days).padStart(2,'0');
-    el('cd-hours').textContent = String(hours).padStart(2,'0');
-    el('cd-mins').textContent = String(mins).padStart(2,'0');
-    el('cd-secs').textContent = String(secs).padStart(2,'0');
+declineBtn.style.display = 'none';
+
+let stage = 'initial'; // 'initial' -> 'awaiting-email' -> 'ready-to-submit'
+
+function isValidEmail(value){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+/* =========================================================
+   RENDER UI based on rsvpRecord
+   - no record            -> undecided: show both buttons
+   - not_attending:false  -> confirmed: show only "cancel" button
+   - not_attending:true   -> declined/cancelled: lock everything
+   ========================================================= */
+function renderStatus(){
+  if(!rsvpRecord){
+    rsvpBox.style.display = '';
+    rsvpSuccess.classList.remove('show');
+    declineBtn.style.display = 'inline-block';
+    declineBtn.textContent = "With regret, I won't be able to attend";
+    rsvpBtn.disabled = false;
+
+  } else if(rsvpRecord.not_attending === false){
+    rsvpBox.style.display = 'none';
+    rsvpSuccess.querySelector('span').textContent = 'Thank you!';
+    rsvpSuccess.querySelector('p').textContent =
+      "Your response has been received with so much gratitude. We'll be in touch soon with your table assignment — we truly can't wait to celebrate with you.";
+    rsvpSuccess.classList.add('show');
+    declineBtn.style.display = 'inline-block';
+    declineBtn.textContent = "I'm so sorry, but I need to cancel my attendance";
+
+  } else {
+    rsvpBox.style.display = 'none';
+    declineBtn.style.display = 'none';
+    rsvpSuccess.querySelector('span').textContent = 'Noted, thank you.';
+    rsvpSuccess.querySelector('p').textContent =
+      "We've recorded that you won't be able to join us. Thank you for letting us know — you'll be missed!";
+    rsvpSuccess.classList.add('show');
   }
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
+}
 
-  /* =========================================================
-     FLOATING PETALS (skipped automatically if reduced motion is preferred)
-     ========================================================= */
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(!prefersReducedMotion){
-    const layer = document.getElementById('petalLayer');
-    const petalCount = 10;
-    for(let i=0; i<petalCount; i++){
-      const petal = document.createElement('div');
-      petal.className = 'petal';
-      petal.style.left = Math.random()*100 + '%';
-      const duration = 14 + Math.random()*10;
-      petal.style.animationDuration = duration + 's';
-      petal.style.animationDelay = (Math.random()*duration) + 's';
-      petal.style.width = petal.style.height = (10 + Math.random()*8) + 'px';
-      layer.appendChild(petal);
-    }
-  }
-
-  /* =========================================================
-     SUPABASE SETUP
-     Replace these two values with your own project's credentials
-     (Supabase dashboard -> Settings -> API)
-     ========================================================= */
-  const SUPABASE_URL = "https://rprjwbdnzllmglwjbllg.supabase.co";        // e.g. https://xxxxxxxx.supabase.co
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwcmp3YmRuemxsbWdsd2pibGxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1MDQxODEsImV4cCI6MjA5OTA4MDE4MX0.ZhIIU8_M_Ff1bzBePaC-3lkekdXEkJ727qjP5wWm3j0";
-
-  const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-);
+/* =========================================================
+   LOAD INVITATION + EXISTING RSVP STATUS
+   ========================================================= */
 async function loadInvitation(){
 
-    if(!inviteCode){
-        document.getElementById("recipientName").textContent =
-            "Unknown Guest";
-        return;
-    }
+  if(!inviteCode){
+    document.getElementById("recipientName").textContent = "Unknown Guest";
+    rsvpBtn.disabled = true;
+    return;
+  }
 
-    const { data, error } = await supabaseClient
-        .from("invitations")
-        .select("*")
-        .eq("invite_code", inviteCode)
-        .single();
+  const { data, error } = await supabaseClient
+    .from("invitations")
+    .select("*")
+    .eq("invite_code", inviteCode)
+    .single();
 
-    if(error){
+  if(error){
+    console.error(error);
+    document.getElementById("recipientName").textContent = "Invitation Not Found";
+    rsvpBtn.disabled = true;
+    declineBtn.style.display = 'none';
+    return;
+  }
 
-        console.error(error);
+  invitation = data;
 
-        document.getElementById("recipientName").textContent =
-            "Invitation Not Found";
+  // Always show the recipient name, regardless of RSVP status
+  document.getElementById("recipientName").textContent =
+    `${invitation.recipient_name} (${invitation.allowed_guest} Guest${invitation.allowed_guest > 1 ? 's' : ''})`;
 
-        document.getElementById("rsvpBtn").disabled = true;
-
-        return;
-    }
-
-invitation = data;
-
-// ALWAYS show the recipient name first
-document.getElementById("recipientName").textContent =
-    `${invitation.recipient_name} (${invitation.allowed_guest} Guest${invitation.allowed_guest > 1 ? "s" : ""})`;
-
-// Check if already RSVP'd
-const { data: existing } = await supabaseClient
+  const { data: existing } = await supabaseClient
     .from("rsvp")
-    .select("id")
+    .select("*")
     .eq("invite_code", inviteCode)
     .maybeSingle();
 
-if (existing) {
-document.querySelector(".rsvp-box").style.display = "none";
-document.getElementById("rsvpSuccess").classList.add("show");
-
-declineBtn.textContent =
-    "I'm so sorry, but I need to cancel my attendance";
-
-declineBtn.style.display = "inline-block";
-
-return;
-}
-
-// Enable RSVP button
-rsvpBtn.disabled = false;
-
-// Show the decline button
-declineBtn.style.display = "inline-block";
-declineBtn.textContent =
-    "I'm so sorry, I won't be able to attend";
+  rsvpRecord = existing || null;
+  renderStatus();
 }
 
 if(inviteCode){
-
-    loadInvitation();
-
+  loadInvitation();
 }else{
-
-    document.getElementById("recipientName").textContent =
-        "Invitation Link Invalid";
-
-    rsvpBtn.disabled = true;
-
+  document.getElementById("recipientName").textContent = "Invitation Link Invalid";
+  rsvpBtn.disabled = true;
+  declineBtn.style.display = 'none';
 }
 
-  /* =========================================================
-     RSVP BUTTON FLOW
-     1. Click "Confirm My Attendance" -> email field slides open
-     2. Valid email typed -> button label becomes "Submit"
-     3. Click "Submit" -> saved to database, success message shown
-     ========================================================= */
-  const rsvpBtn = document.getElementById('rsvpBtn');
-// Disable until invitation is loaded
-rsvpBtn.disabled = true;
-  const emailField = document.getElementById('emailField');
-  const emailInput = document.getElementById('emailInput');
-  const rsvpStatus = document.getElementById('rsvpStatus');
-  const rsvpBox = document.querySelector('.rsvp-box');
-  const rsvpSuccess = document.getElementById('rsvpSuccess');
-
- const declineBtn = document.getElementById("declineBtn");
- const declineModal = document.getElementById("declineModal");
- const cancelDecline = document.getElementById("cancelDecline");
- const submitDecline = document.getElementById("submitDecline");
- const declineEmail = document.getElementById("declineEmail");
- const declineReason = document.getElementById("declineReason");
-
-  let stage = 'initial'; // 'initial' -> 'awaiting-email' -> 'ready-to-submit'
-
-  function isValidEmail(value){
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+/* =========================================================
+   PRIMARY BUTTON: Confirm My Attendance
+   1. Click -> email field slides open
+   2. Valid email typed -> button label becomes "Submit"
+   3. Click "Submit" -> saved to database, UI switches to "confirmed" state
+   ========================================================= */
+emailInput.addEventListener('input', () => {
+  if(isValidEmail(emailInput.value.trim())){
+    stage = 'ready-to-submit';
+    rsvpBtn.textContent = 'Submit';
+    rsvpStatus.textContent = '';
+    rsvpStatus.className = 'rsvp-status';
+  } else {
+    stage = 'awaiting-email';
+    rsvpBtn.textContent = 'Confirm My Attendance';
   }
+});
 
-  emailInput.addEventListener('input', () => {
-    if(isValidEmail(emailInput.value.trim())){
-      stage = 'ready-to-submit';
-      rsvpBtn.textContent = 'Submit';
-      rsvpStatus.textContent = '';
-      rsvpStatus.className = 'rsvp-status';
-    } else {
-      stage = 'awaiting-email';
-      rsvpBtn.textContent = 'Confirm My Attendance';
-    }
-  });
-
-  rsvpBtn.addEventListener('click', async () => {
-if (!invitation) {
+rsvpBtn.addEventListener('click', async () => {
+  if(!invitation){
     rsvpStatus.textContent = "Invitation not found.";
     rsvpStatus.className = "rsvp-status error";
     return;
-}
-    if(stage === 'initial'){
-      emailField.classList.add('open');
-      emailInput.focus();
-      stage = 'awaiting-email';
-      return;
-    }
+  }
 
-    if(stage === 'awaiting-email'){
-      rsvpStatus.textContent = 'Please enter a valid email address.';
-      rsvpStatus.className = 'rsvp-status error';
-      emailInput.focus();
-      return;
-    }
-
-    if(stage === 'ready-to-submit'){
-    const email = emailInput.value.trim();
-	const { data: existing } = await supabaseClient
-    .from("rsvp")
-    .select("id")
-    .eq("invite_code", inviteCode)
-    .maybeSingle();
-
-if(existing){
-
-    rsvpStatus.textContent =
-        "You have already confirmed your attendance.";
-
-    rsvpStatus.className = "rsvp-status info";
-
+  if(stage === 'initial'){
+    emailField.classList.add('open');
+    emailInput.focus();
+    stage = 'awaiting-email';
     return;
-}
-      rsvpBtn.disabled = true;
-      rsvpBtn.textContent = 'Submitting...';
-      rsvpStatus.textContent = '';
+  }
 
-    const payload = {
-    invite_code: inviteCode,
-    email: email,
-	not_attending: false
-};
+  if(stage === 'awaiting-email'){
+    rsvpStatus.textContent = 'Please enter a valid email address.';
+    rsvpStatus.className = 'rsvp-status error';
+    emailInput.focus();
+    return;
+  }
+
+  if(stage === 'ready-to-submit'){
+    const email = emailInput.value.trim();
+
+    rsvpBtn.disabled = true;
+    rsvpBtn.textContent = 'Submitting...';
+    rsvpStatus.textContent = '';
 
     try{
+      const { data: existing } = await supabaseClient
+        .from("rsvp")
+        .select("id")
+        .eq("invite_code", inviteCode)
+        .maybeSingle();
 
-        const { data: existing } = await supabaseClient
-            .from("rsvp")
-            .select("id")
-            .eq("invite_code", inviteCode)
-            .maybeSingle();
+      if(existing){
+        const { error } = await supabaseClient
+          .from("rsvp")
+          .update({ email: email, not_attending: false })
+          .eq("invite_code", inviteCode);
+        if(error) throw error;
+      } else {
+        const { error } = await supabaseClient
+          .from("rsvp")
+          .insert([{ invite_code: inviteCode, email: email, not_attending: false }]);
+        if(error) throw error;
+      }
 
-        if(existing){
-
-            const { error } = await supabaseClient
-                .from("rsvp")
-                .update({
-                    email: email,
-                    not_attending: false
-                })
-                .eq("invite_code", inviteCode);
-
-            if(error) throw error;
-
-        }else{
-
-            const { error } = await supabaseClient
-                .from("rsvp")
-                .insert([payload]);
-
-            if(error) throw error;
-
-        }
-
-        declineModal.classList.remove("show");
-
-        alert("Thank you for letting us know. We truly appreciate your response and will surely miss celebrating with you.");
-
-        location.reload();
+      rsvpRecord = { not_attending: false };
+      renderStatus();
 
     }catch(err){
-
-        console.error(err);
-
-        alert("Something went wrong.");
-
+      console.error(err);
+      rsvpStatus.textContent = 'Something went wrong saving your response. Please try again in a moment.';
+      rsvpStatus.className = 'rsvp-status error';
+      rsvpBtn.disabled = false;
+      rsvpBtn.textContent = 'Submit';
     }
-
-});
-	declineBtn.addEventListener("click", () => {
-
-    declineEmail.value = "";
-    declineReason.value = "";
-
-    declineModal.classList.add("show");
+  }
 });
 
-	cancelDecline.addEventListener("click", () => {
-
-    declineModal.classList.remove("show");
-
+/* =========================================================
+   SECONDARY / CANCEL BUTTON
+   Opens the decline modal. Works whether this is:
+   - an initial decline (no rsvp row yet), or
+   - a cancellation after already confirming (row exists, flips it)
+   ========================================================= */
+declineBtn.addEventListener('click', () => {
+  declineEmail.value = '';
+  declineReason.value = '';
+  declineModal.classList.add('show');
 });
-		submitDecline.addEventListener("click", async () => {
 
-    const email = declineEmail.value.trim();
-    const reason = declineReason.value.trim();
+cancelDecline.addEventListener('click', () => {
+  declineModal.classList.remove('show');
+});
 
-    if(email === ""){
-        alert("Please enter your email.");
-        return;
-    }
+submitDecline.addEventListener('click', async () => {
+  const email = declineEmail.value.trim();
+  const reason = declineReason.value.trim();
 
-    if(reason === ""){
-        alert("Please let us know the reason.");
-        return;
-    }
+  if(!isValidEmail(email)){
+    alert('Please enter a valid email address.');
+    return;
+  }
 
-      try{
-        if(!supabaseClient){
-          throw new Error('Database not configured yet.');
-        }
-        const { data: existing } = await supabaseClient
-    .from("rsvp")
-    .select("id")
-    .eq("invite_code", inviteCode)
-    .maybeSingle();
+  submitDecline.disabled = true;
 
-if(existing){
+  try{
+    const { data: existing } = await supabaseClient
+      .from("rsvp")
+      .select("id")
+      .eq("invite_code", inviteCode)
+      .maybeSingle();
 
-    const { error } = await supabaseClient
+    if(existing){
+      const { error } = await supabaseClient
         .from("rsvp")
-        .update({
-            email: email,
-            reason: reason,
-            not_attending: true
-        })
+        .update({ email: email, reason: reason, not_attending: true })
         .eq("invite_code", inviteCode);
-
-    if(error) throw error;
-
-}else{
-
-    const { error } = await supabaseClient
+      if(error) throw error;
+    } else {
+      const { error } = await supabaseClient
         .from("rsvp")
-        .insert([{
-            invite_code: inviteCode,
-            email: email,
-            reason: reason,
-            not_attending: true
-        }]);
-
-    if(error) throw error;
-
-}
-        if(error) throw error;
-
-rsvpBox.style.display = 'none';
-
-rsvpSuccess.classList.add('show');
-
-declineBtn.style.display = "inline-block";
-
-declineBtn.textContent =
-"I'm so sorry, but I need to cancel my attendance";
-      }catch(err){
-	    console.log("FULL ERROR:");
-	    console.log(JSON.stringify(err, null, 2));
-	    console.error(err);
-        rsvpStatus.textContent = 'Something went wrong saving your response. Please try again in a moment.';
-        rsvpStatus.className = 'rsvp-status error';
-        rsvpBtn.disabled = false;
-        rsvpBtn.textContent = 'Submit';
-      }
+        .insert([{ invite_code: inviteCode, email: email, reason: reason, not_attending: true }]);
+      if(error) throw error;
     }
-  });
+
+    rsvpRecord = { not_attending: true };
+    declineModal.classList.remove('show');
+    renderStatus();
+
+  }catch(err){
+    console.error(err);
+    alert('Something went wrong saving your response. Please try again.');
+  }finally{
+    submitDecline.disabled = false;
+  }
+});
 </script>
-<div id="declineModal" class="modal">
 
-    <div class="modal-content">
-
-        <h2>We're sorry you can't make it</h2>
-
-        <p style="margin-top:10px;margin-bottom:20px;">
-            We completely understand that plans can change.
-            Kindly let us know below so we can update our preparations.
-        </p>
-
-        <input
-            type="email"
-            id="declineEmail"
-            placeholder="Email Address">
-
-        <textarea
-            id="declineReason"
-            rows="5"
-            placeholder="Reason (optional but appreciated)"></textarea>
-
-        <div class="modal-buttons">
-
-            <button id="cancelDecline">
-                Close
-            </button>
-
-            <button id="submitDecline">
-                Submit
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-</body>
-</html>
 </body>
 </html>
