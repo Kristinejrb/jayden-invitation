@@ -1308,13 +1308,15 @@
 <!-- ============ DECLINE / CANCEL MODAL ============ -->
 <div id="declineModal" class="modal">
   <div class="modal-content">
-    <h2>We're sorry you can't make it</h2>
-    <p style="margin-top:10px;margin-bottom:20px;">
+    <h2 id="declineModalTitle">We're sorry you can't make it</h2>
+    <p id="declineModalIntro" style="margin-top:10px;margin-bottom:20px;">
         We completely understand that plans can change.
         Kindly let us know below so we can update our preparations.
     </p>
 
-    <input type="email" id="declineEmail" placeholder="Email Address">
+    <div id="declineEmailWrap">
+      <input type="email" id="declineEmail" placeholder="Email Address">
+    </div>
     <textarea id="declineReason" rows="5" placeholder="Reason (optional but appreciated)"></textarea>
 
     <div class="modal-buttons">
@@ -1447,6 +1449,10 @@ const cancelDecline = document.getElementById('cancelDecline');
 const submitDecline = document.getElementById('submitDecline');
 const declineEmail = document.getElementById('declineEmail');
 const declineReason = document.getElementById('declineReason');
+const declineEmailWrap = document.getElementById('declineEmailWrap');
+const declineModalTitle = document.getElementById('declineModalTitle');
+const declineModalIntro = document.getElementById('declineModalIntro');
+let declineMode = 'decline'; // 'decline' (no rsvp row yet) or 'cancel' (already confirmed, has email on file)
 
 rsvpBtn.disabled = true;
 declineBtn.style.display = 'none';
@@ -1593,11 +1599,15 @@ rsvpBtn.addEventListener('click', async () => {
         .maybeSingle();
 
       if(existing){
-        const { error } = await supabaseClient
+        const { data: updatedRows, error } = await supabaseClient
           .from("rsvp")
           .update({ email: email, not_attending: false })
-          .eq("invite_code", inviteCode);
+          .eq("invite_code", inviteCode)
+          .select();
         if(error) throw error;
+        if(!updatedRows || updatedRows.length === 0){
+          throw new Error('No matching RSVP record was updated — this usually means the database permissions (Row Level Security) do not allow updates for this key.');
+        }
       } else {
         const { error } = await supabaseClient
           .from("rsvp")
@@ -1605,7 +1615,7 @@ rsvpBtn.addEventListener('click', async () => {
         if(error) throw error;
       }
 
-      rsvpRecord = { not_attending: false };
+      rsvpRecord = { not_attending: false, email: email };
       renderStatus();
 
     }catch(err){
@@ -1625,8 +1635,24 @@ rsvpBtn.addEventListener('click', async () => {
    - a cancellation after already confirming (row exists, flips it)
    ========================================================= */
 declineBtn.addEventListener('click', () => {
-  declineEmail.value = '';
+  // If they already confirmed attendance (rsvpRecord.not_attending === false),
+  // this is a CANCELLATION — we already have their email, so only ask for a reason.
+  // Otherwise this is an initial decline — we have no email on file yet.
+  declineMode = (rsvpRecord && rsvpRecord.not_attending === false) ? 'cancel' : 'decline';
   declineReason.value = '';
+
+  if(declineMode === 'cancel'){
+    declineEmailWrap.style.display = 'none';
+    declineEmail.value = (rsvpRecord && rsvpRecord.email) ? rsvpRecord.email : '';
+    declineModalTitle.textContent = "We're sorry to hear that";
+    declineModalIntro.textContent = "We understand plans can change. Feel free to let us know why, then confirm below to cancel your attendance.";
+  } else {
+    declineEmailWrap.style.display = '';
+    declineEmail.value = '';
+    declineModalTitle.textContent = "We're sorry you can't make it";
+    declineModalIntro.textContent = "We completely understand that plans can change. Kindly let us know below so we can update our preparations.";
+  }
+
   declineModal.classList.add('show');
 });
 
@@ -1638,7 +1664,9 @@ submitDecline.addEventListener('click', async () => {
   const email = declineEmail.value.trim();
   const reason = declineReason.value.trim();
 
-  if(!isValidEmail(email)){
+  // Email is only collected (and required) in "decline" mode.
+  // In "cancel" mode we already have it on file from their earlier confirmation.
+  if(declineMode === 'decline' && !isValidEmail(email)){
     alert('Please enter a valid email address.');
     return;
   }
@@ -1653,11 +1681,15 @@ submitDecline.addEventListener('click', async () => {
       .maybeSingle();
 
     if(existing){
-      const { error } = await supabaseClient
+      const { data: updatedRows, error } = await supabaseClient
         .from("rsvp")
         .update({ email: email, reason: reason, not_attending: true })
-        .eq("invite_code", inviteCode);
+        .eq("invite_code", inviteCode)
+        .select();
       if(error) throw error;
+      if(!updatedRows || updatedRows.length === 0){
+        throw new Error('No matching RSVP record was updated — this usually means the database permissions (Row Level Security) do not allow updates for this key.');
+      }
     } else {
       const { error } = await supabaseClient
         .from("rsvp")
@@ -1665,13 +1697,13 @@ submitDecline.addEventListener('click', async () => {
       if(error) throw error;
     }
 
-    rsvpRecord = { not_attending: true };
+    rsvpRecord = { not_attending: true, email: email, reason: reason };
     declineModal.classList.remove('show');
     renderStatus();
 
   }catch(err){
     console.error(err);
-    alert('Something went wrong saving your response. Please try again.');
+    alert(err.message || 'Something went wrong saving your response. Please try again.');
   }finally{
     submitDecline.disabled = false;
   }
