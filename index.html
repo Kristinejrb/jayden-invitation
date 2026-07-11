@@ -668,6 +668,23 @@
     background:rgba(255,255,255,.08);
   }
 
+  .rsvp-note{
+    margin-top:26px;
+    max-width:420px;
+    margin-left:auto;
+    margin-right:auto;
+    font-size:0.78rem;
+    line-height:1.7;
+    color:rgba(241,234,217,0.75);
+    position:relative;
+    z-index:2;
+  }
+
+  .rsvp-note strong{
+    color:var(--gold-soft);
+    font-weight:600;
+  }
+
   .email-field{
     max-height:0;
     overflow:hidden;
@@ -1241,6 +1258,12 @@
   <button class="decline-btn" id="declineBtn" style="display:none;">
       With regret, I won't be able to attend
   </button>
+
+  <p class="rsvp-note">
+    We'd love to hear from you by <strong>September 13, 2026</strong> — a month before the big day.
+    If we haven't heard back by then, we'll gently take it that you won't be able to join us.
+    It would make us a little sad, but we'll understand with all our hearts, and we'll still be thinking of you as we celebrate.
+  </p>
 </section>
 
 	<!-- ============ DRESS CODE ============ -->
@@ -1385,6 +1408,13 @@ let rsvpRecord = null; // the guest's existing row in "rsvp", if any
    ========================================================= */
 const targetDate = new Date("2026-10-13T11:00:00");
 
+/* RSVP deadline: confirmations close starting September 13, 2026 (a month before the event) */
+const RSVP_DEADLINE = new Date("2026-09-13T00:00:00");
+
+function isRsvpClosed(){
+  return new Date() >= RSVP_DEADLINE;
+}
+
 function updateCountdown(){
   const now = new Date();
   const diff = targetDate - now;
@@ -1475,7 +1505,15 @@ function renderStatus(){
     rsvpSuccess.classList.remove('show');
     declineBtn.style.display = 'inline-block';
     declineBtn.textContent = "With regret, I won't be able to attend";
-    rsvpBtn.disabled = false;
+
+    if(isRsvpClosed()){
+      rsvpBtn.disabled = true;
+      rsvpBtn.textContent = 'RSVP Closed';
+      rsvpStatus.textContent = "We're sorry, the RSVP window has closed. We'll gently take it that you won't be able to join us.";
+      rsvpStatus.className = 'rsvp-status info';
+    } else {
+      rsvpBtn.disabled = false;
+    }
 
   } else if(rsvpRecord.not_attending === false){
     rsvpBox.style.display = 'none';
@@ -1567,6 +1605,14 @@ rsvpBtn.addEventListener('click', async () => {
   if(!invitation){
     rsvpStatus.textContent = "Invitation not found.";
     rsvpStatus.className = "rsvp-status error";
+    return;
+  }
+
+  if(isRsvpClosed()){
+    rsvpBtn.disabled = true;
+    rsvpBtn.textContent = 'RSVP Closed';
+    rsvpStatus.textContent = "We're sorry, the RSVP window has closed. We'll gently take it that you won't be able to join us.";
+    rsvpStatus.className = 'rsvp-status info';
     return;
   }
 
