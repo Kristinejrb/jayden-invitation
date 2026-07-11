@@ -410,6 +410,13 @@
 
     padding:18px 12px;
 
+    cursor:grab;
+    user-select:none;
+
+}
+
+.notes-viewport:active{
+    cursor:grabbing;
 }
 
 .notes-track{
@@ -1174,7 +1181,7 @@
     <h2 class="serif">Before We Celebrate</h2>
 
     <div class="notes-slider">
-	<div class="notes-viewport">
+	<div class="notes-viewport" id="notesViewport">
 
         <div class="notes-track" id="notesTrack">
 
@@ -1356,6 +1363,7 @@
 const track=document.getElementById("notesTrack");
 const dots=document.querySelectorAll(".slider-dots .dot");
 const slider=document.querySelector(".notes-slider");
+const notesViewport=document.getElementById("notesViewport");
 let currentSlide=0;
 let autoSlide;
 let isPaused=false;
@@ -1376,6 +1384,12 @@ function nextSlide(){
     showSlide(currentSlide);
 }
 
+function goToSlide(index){
+    if(index < 0) index = dots.length - 1;
+    if(index >= dots.length) index = 0;
+    showSlide(index);
+}
+
 function startSlider(){
     clearInterval(autoSlide);
     autoSlide=setInterval(nextSlide,3000);
@@ -1390,8 +1404,55 @@ dots.forEach((dot,index)=>{
 
 slider.addEventListener("mouseenter",()=>{ isPaused=true; });
 slider.addEventListener("mouseleave",()=>{ isPaused=false; });
-slider.addEventListener("touchstart",()=>{ isPaused=true; });
-slider.addEventListener("touchend",()=>{ setTimeout(()=>{ isPaused=false; },4000); });
+
+/* ---------- Manual swipe / drag (touch + mouse) ---------- */
+let dragStartX = 0;
+let dragDeltaX = 0;
+let isDragging = false;
+const SWIPE_THRESHOLD = 40; // px needed to count as an intentional swipe
+
+function dragStart(clientX){
+    isDragging = true;
+    isPaused = true;
+    dragStartX = clientX;
+    dragDeltaX = 0;
+    track.style.transition = 'none';
+}
+
+function dragMove(clientX){
+    if(!isDragging) return;
+    dragDeltaX = clientX - dragStartX;
+    const viewportWidth = notesViewport.getBoundingClientRect().width || 1;
+    const dragPercent = (dragDeltaX / viewportWidth) * 100;
+    track.style.transform = `translateX(calc(-${currentSlide * 100}% + ${dragPercent}%))`;
+}
+
+function dragEnd(){
+    if(!isDragging) return;
+    isDragging = false;
+    track.style.transition = '';
+
+    if(Math.abs(dragDeltaX) > SWIPE_THRESHOLD){
+        if(dragDeltaX < 0){
+            goToSlide(currentSlide + 1); // swiped left -> next
+        } else {
+            goToSlide(currentSlide - 1); // swiped right -> previous
+        }
+    } else {
+        showSlide(currentSlide); // snap back
+    }
+
+    setTimeout(()=>{ isPaused = false; }, 4000);
+}
+
+notesViewport.addEventListener("touchstart", (e)=>{ dragStart(e.touches[0].clientX); }, { passive: true });
+notesViewport.addEventListener("touchmove", (e)=>{ dragMove(e.touches[0].clientX); }, { passive: true });
+notesViewport.addEventListener("touchend", ()=>{ dragEnd(); });
+
+notesViewport.addEventListener("mousedown", (e)=>{ dragStart(e.clientX); });
+notesViewport.addEventListener("mousemove", (e)=>{ dragMove(e.clientX); });
+notesViewport.addEventListener("mouseup", ()=>{ dragEnd(); });
+notesViewport.addEventListener("mouseleave", ()=>{ if(isDragging) dragEnd(); });
 
 startSlider();
 
