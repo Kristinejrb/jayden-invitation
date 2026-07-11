@@ -1259,7 +1259,7 @@
       With regret, I won't be able to attend
   </button>
 
-  <p class="rsvp-note">
+  <p class="rsvp-note" id="rsvpNote">
     We'd love to hear from you by <strong>September 13, 2026</strong> — a month before the big day.
     If we haven't heard back by then, we'll gently take it that you won't be able to join us.
     It would make us a little sad, but we'll understand with all our hearts, and we'll still be thinking of you as we celebrate.
@@ -1474,6 +1474,7 @@ const rsvpStatus = document.getElementById('rsvpStatus');
 const rsvpBox = document.querySelector('.rsvp-box');
 const rsvpSuccess = document.getElementById('rsvpSuccess');
 const declineBtn = document.getElementById('declineBtn');
+const rsvpNote = document.getElementById('rsvpNote');
 const declineModal = document.getElementById('declineModal');
 const cancelDecline = document.getElementById('cancelDecline');
 const submitDecline = document.getElementById('submitDecline');
@@ -1486,6 +1487,7 @@ let declineMode = 'decline'; // 'decline' (no rsvp row yet) or 'cancel' (already
 
 rsvpBtn.disabled = true;
 declineBtn.style.display = 'none';
+rsvpNote.style.display = 'none';
 
 let stage = 'initial'; // 'initial' -> 'awaiting-email' -> 'ready-to-submit'
 
@@ -1505,6 +1507,7 @@ function renderStatus(){
     rsvpSuccess.classList.remove('show');
     declineBtn.style.display = 'inline-block';
     declineBtn.textContent = "With regret, I won't be able to attend";
+    rsvpNote.style.display = '';
 
     if(isRsvpClosed()){
       rsvpBtn.disabled = true;
@@ -1523,6 +1526,7 @@ function renderStatus(){
     rsvpSuccess.classList.add('show');
     declineBtn.style.display = 'inline-block';
     declineBtn.textContent = "I'm so sorry, but I need to cancel my attendance";
+    rsvpNote.style.display = 'none';
 
   } else {
     rsvpBox.style.display = 'none';
@@ -1531,6 +1535,7 @@ function renderStatus(){
     rsvpSuccess.querySelector('p').textContent =
       "We've recorded that you won't be able to join us. Thank you for letting us know — you'll be missed!";
     rsvpSuccess.classList.add('show');
+    rsvpNote.style.display = 'none';
   }
 }
 
