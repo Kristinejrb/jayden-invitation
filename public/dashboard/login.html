@@ -185,8 +185,9 @@ const SUPABASE_URL =
 const SUPABASE_ANON_KEY =
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwcmp3YmRuemxsbWdsd2pibGxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1MDQxODEsImV4cCI6MjA5OTA4MDE4MX0.ZhIIU8_M_Ff1bzBePaC-3lkekdXEkJ727qjP5wWm3j0";
 
-const supabase =
-window.supabase.createClient(
+// Create client correctly
+const supabaseClient =
+supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
 );
@@ -194,7 +195,7 @@ window.supabase.createClient(
 async function login(){
 
     const email =
-        document.getElementById("email").value;
+        document.getElementById("email").value.trim();
 
     const password =
         document.getElementById("password").value;
@@ -206,30 +207,44 @@ async function login(){
         document.getElementById("error");
 
     errorDiv.style.display = "none";
+    errorDiv.innerHTML = "";
+
     loading.style.display = "block";
 
-    const { error } =
-        await supabase.auth.signInWithPassword({
-            email,
-            password
-        });
+    try{
 
-    loading.style.display = "none";
+        const { data, error } =
+            await supabaseClient.auth.signInWithPassword({
+                email,
+                password
+            });
 
-    if(error){
+        loading.style.display = "none";
+
+        if(error){
+            errorDiv.innerHTML = error.message;
+            errorDiv.style.display = "block";
+            return;
+        }
+
+        console.log("Logged in:", data);
+
+        window.location.href =
+            "/dashboard/index.html";
+
+    }
+    catch(err){
+
+        loading.style.display = "none";
 
         errorDiv.innerHTML =
-            error.message;
+            err.message || "Unexpected error";
 
-        errorDiv.style.display =
-            "block";
+        errorDiv.style.display = "block";
 
-        return;
+        console.error(err);
+
     }
-
-    window.location.href =
-        "/dashboard/";
-
 }
 
 document.addEventListener(
@@ -242,6 +257,20 @@ document.addEventListener(
 
     }
 );
+
+// If already logged in
+(async () => {
+
+    const {
+        data: { session }
+    } = await supabaseClient.auth.getSession();
+
+    if(session){
+        window.location.href =
+            "/dashboard/index.html";
+    }
+
+})();
 
 </script>
 
