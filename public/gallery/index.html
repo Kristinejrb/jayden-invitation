@@ -11,6 +11,36 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
+.nav-btn{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    background:rgba(255,255,255,.15);
+    border:none;
+    color:white;
+    font-size:40px;
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    cursor:pointer;
+    backdrop-filter:blur(10px);
+}
+
+.prev-btn{
+    left:20px;
+}
+
+.next-btn{
+    right:20px;
+}
+
+.nav-btn:hover{
+    background:rgba(255,255,255,.25);
+}
+
+.close-btn{
+    z-index:10001;
+}
 
 :root{
     --cream:#FBF7F1;
@@ -128,8 +158,19 @@ body{
 <div class="gallery" id="gallery"></div>
 
 <div class="lightbox" id="lightbox">
-    <span class="close-btn">&times;</span>
+
+    <span class="close-btn" id="closeBtn">&times;</span>
+
+    <button class="nav-btn prev-btn" id="prevBtn">
+        &#10094;
+    </button>
+
     <img id="lightboxImage">
+
+    <button class="nav-btn next-btn" id="nextBtn">
+        &#10095;
+    </button>
+
 </div>
 
 <script>
