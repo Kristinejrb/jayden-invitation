@@ -135,61 +135,98 @@ body{
 <script>
 
 const SUPABASE_URL = "https://rprjwbdnzllmglwjbllg.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwcmp3YmRuemxsbWdsd2pibGxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1MDQxODEsImV4cCI6MjA5OTA4MDE4MX0.ZhIIU8_M_Ff1bzBePaC-3lkekdXEkJ727qjP5wWm3j0";
+const SUPABASE_ANON_KEY = "YOUR_ANON_KEY";
 
-const supabaseClient = supabase.createClient(
+const { createClient } = supabase;
+
+const supabaseClient = createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
 );
 
+const BUCKET = "Photoshoot";
+
 const gallery = document.getElementById("gallery");
 const loading = document.getElementById("loading");
 
-async function loadPhotos(){
+async function loadPhotos() {
 
-    const { data, error } = await supabaseClient
-        .storage
-        .from("Photoshoot")
-        .list("", {
-            limit: 1000,
-            sortBy: { column: "name", order: "asc" }
-        });
+    try {
 
-    if(error){
+        console.log("Loading photos...");
 
-        loading.innerHTML = "Unable to load photos.";
-        console.error(error);
-        return;
-    }
+        const { data, error } = await supabaseClient.storage
+            .from(BUCKET)
+            .list("", {
+                limit: 100,
+                offset: 0,
+                sortBy: {
+                    column: "name",
+                    order: "asc"
+                }
+            });
 
-    loading.style.display = "none";
+        console.log("Files:", data);
+        console.log("Error:", error);
 
-    data.forEach(file => {
-
-        if(!file.name.match(/\.(jpg|jpeg|png|webp)$/i)){
+        if (error) {
+            loading.innerHTML = "Error loading photos.";
+            console.error(error);
             return;
         }
 
-        const { data: publicUrlData } =
-            supabaseClient.storage
-                .from("Photoshoot")
-                .getPublicUrl(file.name);
+        if (!data || data.length === 0) {
+            loading.innerHTML = "No photos found.";
+            return;
+        }
 
-        const url = publicUrlData.publicUrl;
+        loading.style.display = "none";
 
-        const card = document.createElement("div");
-        card.className = "photo-card";
+        data.forEach(file => {
 
-        card.innerHTML = `
-            <img src="${url}" loading="lazy">
-        `;
+            if (
+                !file.name.toLowerCase().endsWith(".jpg") &&
+                !file.name.toLowerCase().endsWith(".jpeg") &&
+                !file.name.toLowerCase().endsWith(".png") &&
+                !file.name.toLowerCase().endsWith(".webp")
+            ) {
+                return;
+            }
 
-        card.addEventListener("click", () => {
-            openLightbox(url);
+            const { data: publicUrlData } =
+                supabaseClient.storage
+                    .from(BUCKET)
+                    .getPublicUrl(file.name);
+
+            const imageUrl = publicUrlData.publicUrl;
+
+            console.log("Image URL:", imageUrl);
+
+            const card = document.createElement("div");
+            card.className = "photo-card";
+
+            const img = document.createElement("img");
+            img.src = imageUrl;
+            img.loading = "lazy";
+
+            img.onerror = () => {
+                console.error("Failed to load:", imageUrl);
+            };
+
+            card.appendChild(img);
+
+            card.addEventListener("click", () => {
+                openLightbox(imageUrl);
+            });
+
+            gallery.appendChild(card);
         });
 
-        gallery.appendChild(card);
-    });
+    } catch (err) {
+
+        console.error(err);
+        loading.innerHTML = "Unexpected error. Check browser console.";
+    }
 }
 
 loadPhotos();
@@ -197,9 +234,9 @@ loadPhotos();
 const lightbox = document.getElementById("lightbox");
 const lightboxImage = document.getElementById("lightboxImage");
 
-function openLightbox(url){
-    lightbox.classList.add("show");
+function openLightbox(url) {
     lightboxImage.src = url;
+    lightbox.classList.add("show");
 }
 
 lightbox.addEventListener("click", () => {
@@ -207,6 +244,5 @@ lightbox.addEventListener("click", () => {
 });
 
 </script>
-
 </body>
 </html>
