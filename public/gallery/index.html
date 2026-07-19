@@ -149,7 +149,7 @@ async function loadPhotos(){
 
     const { data, error } = await supabaseClient
         .storage
-        .from("photoshoot")
+        .from("Photoshoot")
         .list("", {
             limit: 1000,
             sortBy: { column: "name", order: "asc" }
@@ -172,7 +172,7 @@ async function loadPhotos(){
 
         const { data: publicUrlData } =
             supabaseClient.storage
-                .from("photoshoot")
+                .from("Photoshoot")
                 .getPublicUrl(file.name);
 
         const url = publicUrlData.publicUrl;
