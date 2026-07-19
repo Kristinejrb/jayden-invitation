@@ -151,57 +151,40 @@ document.getElementById("gallery");
 const loading =
 document.getElementById("loading");
 
-async function loadPhotos(){
+async function loadPhotos() {
 
-    const { data, error } =
-        await supabaseClient
-            .from("gallery")
-            .select("*")
-            .order("id");
+    const testImages = [
 
-    if(error){
+        "20260716_135342 - Copy.jpg"
 
-        loading.innerHTML =
-            "Unable to load gallery";
+        // Add more filenames here
+        // "photo2.jpg",
+        // "photo3.jpg"
 
-        console.error(error);
-        return;
-    }
-
-    if(!data.length){
-
-        loading.innerHTML =
-            "No photos found";
-
-        return;
-    }
+    ];
 
     loading.style.display = "none";
 
-    data.forEach(photo => {
+    testImages.forEach(filename => {
 
-        const card =
-            document.createElement("div");
+        const imageUrl =
+            `https://rprjwbdnzllmglwjbllg.supabase.co/storage/v1/object/public/Photoshoot/${encodeURIComponent(filename)}`;
 
-        card.className =
-            "photo-card";
+        const card = document.createElement("div");
+        card.className = "photo-card";
 
-        card.innerHTML =
-            `<img src="${photo.image_url}" loading="lazy">`;
+        const img = document.createElement("img");
+        img.src = imageUrl;
+        img.loading = "lazy";
 
-        card.onclick = () => {
+        card.appendChild(img);
 
-            document
-                .getElementById("lightbox")
-                .classList
-                .add("show");
-
-            document
-                .getElementById("lightboxImage")
-                .src = photo.image_url;
-        };
+        card.addEventListener("click", () => {
+            openLightbox(imageUrl);
+        });
 
         gallery.appendChild(card);
+
     });
 }
 
