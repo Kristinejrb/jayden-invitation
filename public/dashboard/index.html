@@ -563,7 +563,7 @@ td{
 const SUPABASE_URL = "https://rprjwbdnzllmglwjbllg.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwcmp3YmRuemxsbWdsd2pibGxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1MDQxODEsImV4cCI6MjA5OTA4MDE4MX0.ZhIIU8_M_Ff1bzBePaC-3lkekdXEkJ727qjP5wWm3j0";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let editingId = null;
 let allInvitations = [];
@@ -577,7 +577,7 @@ const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
    AUTH GUARD
    ========================================================= */
 (async () => {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) {
     window.location = "/dashboard/login.html";
     return;
@@ -601,8 +601,8 @@ function switchTab(name) {
    LOAD EVERYTHING
    ========================================================= */
 async function loadDashboard() {
-  const { data: invitations } = await supabase.from('invitations').select('*').order('recipient_name');
-  const { data: rsvp } = await supabase.from('rsvp').select('*').order('created_at', { ascending: false });
+  const { data: invitations } = await supabaseClient.from('invitations').select('*').order('recipient_name');
+  const { data: rsvp } = await supabaseClient.from('rsvp').select('*').order('created_at', { ascending: false });
 
   allInvitations = invitations || [];
   allRsvp = rsvp || [];
@@ -738,9 +738,9 @@ async function saveGuest() {
   }
 
   if (editingId) {
-    await supabase.from('invitations').update({ recipient_name, allowed_guest }).eq('id', editingId);
+    await supabaseClient.from('invitations').update({ recipient_name, allowed_guest }).eq('id', editingId);
   } else {
-    await supabase.from('invitations').insert({
+    await supabaseClient.from('invitations').insert({
       recipient_name,
       allowed_guest,
       invite_code: crypto.randomUUID()
@@ -753,7 +753,7 @@ async function saveGuest() {
 
 async function deleteGuest(id) {
   if (!confirm("Delete this guest's invitation?")) return;
-  await supabase.from('invitations').delete().eq('id', id);
+  await supabaseClient.from('invitations').delete().eq('id', id);
   loadDashboard();
 }
 
@@ -802,7 +802,7 @@ document.getElementById('rsvpSearch').addEventListener('input', renderRsvpTable)
 
 async function deleteRSVP(id) {
   if (!confirm("Delete this RSVP response?")) return;
-  await supabase.from('rsvp').delete().eq('id', id);
+  await supabaseClient.from('rsvp').delete().eq('id', id);
   loadDashboard();
 }
 
@@ -819,7 +819,7 @@ function escapeAttr(str) {
 }
 
 async function logout() {
-  await supabase.auth.signOut();
+  await supabaseClient.auth.signOut();
   window.location = "/dashboard/login.html";
 }
 
