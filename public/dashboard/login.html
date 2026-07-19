@@ -1,25 +1,194 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Admin Login</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Jayden Kai Admin</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+    --cream:#FBF7F1;
+    --paper:#FFFFFF;
+    --sage:#93A17E;
+    --sage-dark:#5B6B4E;
+    --gold:#B08D57;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(
+        180deg,
+        #FBF7F1 0%,
+        #F5EFE6 100%
+    );
+    font-family:'Montserrat',sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.login-card{
+    width:100%;
+    max-width:420px;
+    background:white;
+    border-radius:30px;
+    padding:50px 35px;
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.08);
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.logo h1{
+    font-family:'Cormorant Garamond',serif;
+    font-size:3rem;
+    color:var(--sage-dark);
+    font-weight:600;
+}
+
+.logo p{
+    color:#777;
+    margin-top:5px;
+}
+
+.input-group{
+    margin-bottom:18px;
+}
+
+.input-group label{
+    display:block;
+    margin-bottom:8px;
+    font-size:.9rem;
+    color:#555;
+}
+
+.input-group input{
+    width:100%;
+    padding:14px 16px;
+    border:1px solid #ddd;
+    border-radius:14px;
+    font-size:1rem;
+    outline:none;
+    transition:.3s;
+}
+
+.input-group input:focus{
+    border-color:var(--gold);
+    box-shadow:
+        0 0 0 4px rgba(176,141,87,.15);
+}
+
+.login-btn{
+    width:100%;
+    border:none;
+    padding:15px;
+    border-radius:14px;
+    background:var(--sage-dark);
+    color:white;
+    font-size:1rem;
+    cursor:pointer;
+    transition:.3s;
+    margin-top:10px;
+}
+
+.login-btn:hover{
+    background:var(--gold);
+}
+
+.error{
+    color:#D9534F;
+    margin-top:15px;
+    text-align:center;
+    display:none;
+}
+
+.loading{
+    display:none;
+    text-align:center;
+    margin-top:15px;
+    color:var(--sage-dark);
+}
+
+.footer{
+    margin-top:30px;
+    text-align:center;
+    color:#999;
+    font-size:.85rem;
+}
+
+</style>
 </head>
 <body>
 
-<h2>Jayden Kai Admin Login</h2>
+<div class="login-card">
 
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
+    <div class="logo">
+        <h1>Jayden Kai</h1>
+        <p>Admin Dashboard</p>
+    </div>
 
-<button onclick="login()">
-Login
-</button>
+    <div class="input-group">
+        <label>Email</label>
+        <input
+            type="email"
+            id="email"
+            placeholder="Enter your email">
+    </div>
+
+    <div class="input-group">
+        <label>Password</label>
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter your password">
+    </div>
+
+    <button
+        class="login-btn"
+        onclick="login()">
+        Sign In
+    </button>
+
+    <div id="loading" class="loading">
+        Signing in...
+    </div>
+
+    <div id="error" class="error"></div>
+
+    <div class="footer">
+        Jayden Kai Invitation System
+    </div>
+
+</div>
 
 <script>
 
-const supabase = window.supabase.createClient(
-    "https://rprjwbdnzllmglwjbllg.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwcmp3YmRuemxsbWdsd2pibGxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1MDQxODEsImV4cCI6MjA5OTA4MDE4MX0.ZhIIU8_M_Ff1bzBePaC-3lkekdXEkJ727qjP5wWm3j0"
+const SUPABASE_URL =
+"https://rprjwbdnzllmglwjbllg.supabase.co";
+
+const SUPABASE_ANON_KEY =
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwcmp3YmRuemxsbWdsd2pibGxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1MDQxODEsImV4cCI6MjA5OTA4MDE4MX0.ZhIIU8_M_Ff1bzBePaC-3lkekdXEkJ727qjP5wWm3j0";
+
+const supabase =
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
 );
 
 async function login(){
@@ -30,20 +199,49 @@ async function login(){
     const password =
         document.getElementById("password").value;
 
+    const loading =
+        document.getElementById("loading");
+
+    const errorDiv =
+        document.getElementById("error");
+
+    errorDiv.style.display = "none";
+    loading.style.display = "block";
+
     const { error } =
         await supabase.auth.signInWithPassword({
             email,
             password
         });
 
+    loading.style.display = "none";
+
     if(error){
-        alert(error.message);
+
+        errorDiv.innerHTML =
+            error.message;
+
+        errorDiv.style.display =
+            "block";
+
         return;
     }
 
     window.location.href =
         "/dashboard/";
+
 }
+
+document.addEventListener(
+    "keydown",
+    function(e){
+
+        if(e.key === "Enter"){
+            login();
+        }
+
+    }
+);
 
 </script>
 
