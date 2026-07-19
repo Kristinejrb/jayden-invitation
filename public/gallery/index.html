@@ -192,47 +192,185 @@ document.getElementById("gallery");
 const loading =
 document.getElementById("loading");
 
+const lightbox =
+document.getElementById("lightbox");
+
+const lightboxImage =
+document.getElementById("lightboxImage");
+
+const prevBtn =
+document.getElementById("prevBtn");
+
+const nextBtn =
+document.getElementById("nextBtn");
+
+const closeBtn =
+document.getElementById("closeBtn");
+
+let photos = [];
+let currentIndex = 0;
+
 async function loadPhotos() {
 
-    console.log("Starting loadPhotos...");
-
-    const { data, error } = await supabaseClient.storage
+    const { data, error } =
+        await supabaseClient.storage
         .from("Photoshoot")
-        .list();
+        .list("", {
+            sortBy:{
+                column:"name",
+                order:"asc"
+            }
+        });
 
-    console.log("DATA:", data);
-    console.log("ERROR:", error);
-
-    if (error) {
-        loading.innerHTML =
-            "ERROR: " + JSON.stringify(error);
-        return;
-    }
-
-    if (!data || data.length === 0) {
-        loading.innerHTML =
-            "No photos returned from Supabase.";
+    if(error){
+        loading.innerHTML = error.message;
         return;
     }
 
     loading.style.display = "none";
 
-    data.forEach(file => {
+    photos = data
+        .filter(file =>
+            /\.(jpg|jpeg|png|webp)$/i.test(file.name)
+        )
+        .map(file =>
+            `${SUPABASE_URL}/storage/v1/object/public/Photoshoot/${encodeURIComponent(file.name)}`
+        );
 
-        const imageUrl =
-            `${SUPABASE_URL}/storage/v1/object/public/Photoshoot/${encodeURIComponent(file.name)}`;
+    photos.forEach((imageUrl,index)=>{
 
-        const card = document.createElement("div");
-        card.className = "photo-card";
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "photo-card";
 
         card.innerHTML =
             `<img src="${imageUrl}" loading="lazy">`;
 
+        card.addEventListener("click",()=>{
+
+            currentIndex = index;
+
+            openLightbox();
+
+        });
+
         gallery.appendChild(card);
 
     });
+
 }
 
+function openLightbox(){
+
+    lightboxImage.src =
+        photos[currentIndex];
+
+    lightbox.classList.add("show");
+
+}
+
+function nextPhoto(){
+
+    currentIndex++;
+
+    if(currentIndex >= photos.length){
+        currentIndex = 0;
+    }
+
+    openLightbox();
+
+}
+
+function prevPhoto(){
+
+    currentIndex--;
+
+    if(currentIndex < 0){
+        currentIndex = photos.length - 1;
+    }
+
+    openLightbox();
+
+}
+
+nextBtn.addEventListener(
+    "click",
+    e=>{
+        e.stopPropagation();
+        nextPhoto();
+    }
+);
+
+prevBtn.addEventListener(
+    "click",
+    e=>{
+        e.stopPropagation();
+        prevPhoto();
+    }
+);
+
+closeBtn.addEventListener(
+    "click",
+    ()=>{
+        lightbox.classList.remove("show");
+    }
+);
+
+lightbox.addEventListener(
+    "click",
+    ()=>{
+        lightbox.classList.remove("show");
+    }
+);
+
+document.addEventListener(
+    "keydown",
+    e=>{
+
+        if(!lightbox.classList.contains("show"))
+            return;
+
+        if(e.key==="ArrowRight")
+            nextPhoto();
+
+        if(e.key==="ArrowLeft")
+            prevPhoto();
+
+        if(e.key==="Escape")
+            lightbox.classList.remove("show");
+
+    }
+);
+
+/* Swipe support */
+
+let startX = 0;
+
+lightbox.addEventListener(
+    "touchstart",
+    e=>{
+        startX =
+            e.touches[0].clientX;
+    }
+);
+
+lightbox.addEventListener(
+    "touchend",
+    e=>{
+
+        let endX =
+            e.changedTouches[0].clientX;
+
+        if(startX - endX > 50)
+            nextPhoto();
+
+        if(endX - startX > 50)
+            prevPhoto();
+
+    }
+);
 loadPhotos();
 
 document
