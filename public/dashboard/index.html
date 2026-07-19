@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Jayden Kai Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+--cream:#FBF7F1;
+--paper:#fff;
+--sage:#93A17E;
+--sage-dark:#5B6B4E;
+--gold:#B08D57;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:var(--cream);
+font-family:'Montserrat',sans-serif;
+}
+
+.header{
+padding:25px 40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:white;
+box-shadow:0 2px 15px rgba(0,0,0,.05);
+}
+
+.logo{
+font-family:'Cormorant Garamond',serif;
+font-size:2rem;
+color:var(--sage-dark);
+}
+
+.logout-btn{
+border:none;
+background:var(--sage-dark);
+color:white;
+padding:10px 18px;
+border-radius:12px;
+cursor:pointer;
+}
+
+.container{
+padding:30px;
+max-width:1400px;
+margin:auto;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-bottom:30px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,.05);
+}
+
+.card h3{
+font-size:.9rem;
+color:#777;
+margin-bottom:10px;
+}
+
+.card .number{
+font-size:2rem;
+font-weight:700;
+color:var(--sage-dark);
+}
+
+.section{
+background:white;
+padding:25px;
+border-radius:20px;
+margin-bottom:30px;
+box-shadow:0 10px 25px rgba(0,0,0,.05);
+}
+
+.section-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.section-title{
+font-family:'Cormorant Garamond',serif;
+font-size:2rem;
+color:var(--sage-dark);
+}
+
+.add-btn{
+background:var(--gold);
+border:none;
+color:white;
+padding:10px 16px;
+border-radius:10px;
+cursor:pointer;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th{
+text-align:left;
+padding:14px;
+background:#fafafa;
+}
+
+td{
+padding:14px;
+border-top:1px solid #eee;
+}
+
+.action-btn{
+border:none;
+padding:8px 12px;
+border-radius:8px;
+cursor:pointer;
+margin-right:5px;
+}
+
+.edit{
+background:#e9f4ff;
+}
+
+.delete{
+background:#ffeaea;
+}
+
+.copy{
+background:#f4f4f4;
+}
+
+.modal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.5);
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+.modal.show{
+display:flex;
+}
+
+.modal-content{
+background:white;
+padding:30px;
+border-radius:20px;
+width:95%;
+max-width:500px;
+}
+
+.modal-content h2{
+margin-bottom:20px;
+}
+
+.modal-content input{
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:1px solid #ddd;
+border-radius:10px;
+}
+
+.save-btn{
+width:100%;
+padding:12px;
+background:var(--sage-dark);
+color:white;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+
+@media(max-width:768px){
+
+table{
+display:block;
+overflow-x:auto;
+}
+
+.header{
+padding:20px;
+}
+
+.container{
+padding:20px;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+<div class="logo">Jayden Kai Dashboard</div>
+<button class="logout-btn" onclick="logout()">
+Logout
+</button>
+</div>
+
+<div class="container">
+
+<div class="cards">
+
+<div class="card">
+<h3>Total Guests</h3>
+<div id="totalGuests" class="number">0</div>
+</div>
+
+<div class="card">
+<h3>Confirmed</h3>
+<div id="confirmedGuests" class="number">0</div>
+</div>
+
+<div class="card">
+<h3>Pending</h3>
+<div id="pendingGuests" class="number">0</div>
+</div>
+
+<div class="card">
+<h3>Not Attending</h3>
+<div id="notAttendingGuests" class="number">0</div>
+</div>
+
+</div>
+
+<div class="section">
+
+<div class="section-header">
+<div class="section-title">
+Invitations
+</div>
+
+<button class="add-btn"
+onclick="openAddGuest()">
+Add Guest
+</button>
+</div>
+
+<table>
+
+<thead>
+<tr>
+<th>Recipient Name</th>
+<th># Guests</th>
+<th>Invitation Link</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="invitationTable">
+</tbody>
+
+</table>
+
+</div>
+
+<div class="section">
+
+<div class="section-header">
+<div class="section-title">
+RSVP Responses
+</div>
+</div>
+
+<table>
+
+<thead>
+<tr>
+<th>Email</th>
+<th>Invite Code</th>
+<th>Reason</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="rsvpTable">
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<div class="modal" id="guestModal">
+
+<div class="modal-content">
+
+<h2>Guest</h2>
+
+<input id="guestName"
+placeholder="Recipient Name">
+
+<input id="allowedGuest"
+type="number"
+placeholder="Allowed Guests">
+
+<button
+class="save-btn"
+onclick="saveGuest()">
+Save Guest
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+const supabase =
+window.supabase.createClient(
+"https://rprjwbdnzllmglwjbllg.supabase.co",
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwcmp3YmRuemxsbWdsd2pibGxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1MDQxODEsImV4cCI6MjA5OTA4MDE4MX0.ZhIIU8_M_Ff1bzBePaC-3lkekdXEkJ727qjP5wWm3j0"
+);
+
+let editingId = null;
+
+(async()=>{
+
+const { data:{session} } =
+await supabase.auth.getSession();
+
+if(!session){
+
+window.location =
+"/dashboard/login.html";
+
+return;
+
+}
+
+loadDashboard();
+
+})();
+
+async function loadDashboard(){
+
+loadSummary();
+loadInvitations();
+loadRSVP();
+
+}
+
+async function loadSummary(){
+
+const { data: invitations } =
+await supabase
+.from('invitations')
+.select('*');
+
+const { data: rsvp } =
+await supabase
+.from('rsvp')
+.select('*');
+
+let totalGuests = 0;
+
+invitations.forEach(i=>{
+totalGuests +=
+Number(i.allowed_guest || 0);
+});
+
+const confirmed =
+rsvp.filter(x=>!x.not_attending).length;
+
+const notAttending =
+rsvp.filter(x=>x.not_attending).length;
+
+document.getElementById("totalGuests")
+.innerHTML = totalGuests;
+
+document.getElementById("confirmedGuests")
+.innerHTML = confirmed;
+
+document.getElementById("notAttendingGuests")
+.innerHTML = notAttending;
+
+document.getElementById("pendingGuests")
+.innerHTML =
+Math.max(
+invitations.length -
+confirmed -
+notAttending,
+0
+);
+
+}
+
+async function loadInvitations(){
+
+const { data } =
+await supabase
+.from('invitations')
+.select('*')
+.order('recipient_name');
+
+const tbody =
+document.getElementById("invitationTable");
+
+tbody.innerHTML='';
+
+data.forEach(row=>{
+
+tbody.innerHTML += `
+<tr>
+
+<td>${row.recipient_name}</td>
+
+<td>${row.allowed_guest}</td>
+
+<td>
+<button
+class="action-btn copy"
+onclick="copyLink('${row.invitation_link}')">
+Copy Link
+</button>
+</td>
+
+<td>
+
+<button
+class="action-btn edit"
+onclick="editGuest('${row.id}','${row.recipient_name}',${row.allowed_guest})">
+Edit
+</button>
+
+<button
+class="action-btn delete"
+onclick="deleteGuest('${row.id}')">
+Delete
+</button>
+
+</td>
+
+</tr>
+`;
+
+});
+
+}
+
+async function loadRSVP(){
+
+const { data } =
+await supabase
+.from('rsvp')
+.select('*')
+.order('created_at',{ascending:false});
+
+const tbody =
+document.getElementById("rsvpTable");
+
+tbody.innerHTML='';
+
+data.forEach(row=>{
+
+tbody.innerHTML += `
+<tr>
+
+<td>${row.email||''}</td>
+
+<td>${row.invite_code||''}</td>
+
+<td>${row.reason||''}</td>
+
+<td>
+${row.not_attending
+? 'Not Attending'
+: 'Confirmed'}
+</td>
+
+<td>
+
+<button
+class="action-btn delete"
+onclick="deleteRSVP('${row.id}')">
+Delete
+</button>
+
+</td>
+
+</tr>
+`;
+
+});
+
+}
+
+function openAddGuest(){
+
+editingId = null;
+
+document.getElementById("guestName").value='';
+document.getElementById("allowedGuest").value='';
+
+document.getElementById("guestModal")
+.classList.add("show");
+
+}
+
+function editGuest(id,name,allowed){
+
+editingId=id;
+
+document.getElementById("guestName")
+.value=name;
+
+document.getElementById("allowedGuest")
+.value=allowed;
+
+document.getElementById("guestModal")
+.classList.add("show");
+
+}
+
+async function saveGuest(){
+
+const recipient_name =
+document.getElementById("guestName").value;
+
+const allowed_guest =
+document.getElementById("allowedGuest").value;
+
+if(editingId){
+
+await supabase
+.from('invitations')
+.update({
+recipient_name,
+allowed_guest
+})
+.eq('id',editingId);
+
+}else{
+
+await supabase
+.from('invitations')
+.insert({
+recipient_name,
+allowed_guest,
+invite_code:
+crypto.randomUUID()
+});
+
+}
+
+document.getElementById("guestModal")
+.classList.remove("show");
+
+loadDashboard();
+
+}
+
+async function deleteGuest(id){
+
+if(!confirm("Delete guest?")) return;
+
+await supabase
+.from('invitations')
+.delete()
+.eq('id',id);
+
+loadDashboard();
+
+}
+
+async function deleteRSVP(id){
+
+if(!confirm("Delete RSVP?")) return;
+
+await supabase
+.from('rsvp')
+.delete()
+.eq('id',id);
+
+loadDashboard();
+
+}
+
+function copyLink(link){
+
+navigator.clipboard.writeText(link);
+
+alert("Invitation copied");
+
+}
+
+async function logout(){
+
+await supabase.auth.signOut();
+
+window.location =
+"/dashboard/login.html";
+
+}
+
+document.getElementById("guestModal")
+.addEventListener("click",(e)=>{
+
+if(e.target.id==="guestModal"){
+
+e.target.classList.remove("show");
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
