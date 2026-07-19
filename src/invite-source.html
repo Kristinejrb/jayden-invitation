@@ -248,60 +248,10 @@
     50%{transform:translateY(8px);}
   }
 
-  .photo-section{
-    position:relative;
-    padding:100px 24px;
-    text-align:center;
-    background:var(--paper);
-    overflow:hidden;
-  }
-
-.photo-frame{
-    position:relative;
-
-    width:min(340px,75vw);
-    aspect-ratio:1/1;
-
-    margin:0 auto 45px;
-
-    border-radius:50%;
-    overflow:hidden;          /* THIS IS THE IMPORTANT PART */
-
-    padding:10px;
-
-    background:white;
-
-    box-shadow:
-        0 0 0 2px var(--gold-soft),
-        0 0 0 10px white,
-        0 25px 55px rgba(91,107,78,.18);
-}
-
-  .photo-frame .placeholder-icon{width:56%;opacity:0.55;}
-
-  .photo-caption{
-    position:absolute;
-    bottom:-34px;
-    font-size:0.68rem;
-    letter-spacing:0.08em;
-    color:var(--sage);
-    text-transform:uppercase;
-  }
-
-  .photo-section h2{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;
-    font-size:1.3rem;
-    color:var(--sage-deep);
-    max-width:480px;
-    margin:0 auto;
-    line-height:1.8;
-  }
-
   .details{
     position:relative;
-    padding:110px 24px;
-    background:linear-gradient(180deg, var(--blush) 0%, var(--cream) 100%);
+    padding:70px 24px;
+    background:linear-gradient(180deg, var(--paper) 0%, var(--blush) 100%);
     text-align:center;
     overflow:hidden;
   }
@@ -375,8 +325,8 @@
   }
 .notes-section{
 
-    padding:110px 24px;
-    background:var(--paper);
+    padding:70px 24px;
+    background:linear-gradient(180deg, var(--blush) 0%, var(--paper) 100%);
     text-align:center;
     overflow:hidden;
 
@@ -754,6 +704,113 @@
 
   :focus-visible{outline:2px solid var(--gold); outline-offset:3px;}
 
+  /* ============ ANCHOR NAV ============ */
+  .site-nav{
+    position:fixed;
+    top:0; left:0; right:0;
+    height:74px;
+    z-index:500;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+    background:rgba(251,247,241,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+
+  .nav-mark{
+    font-family:'Alex Brush',cursive;
+    font-size:1.6rem;
+    color:var(--sage-deep);
+  }
+
+  .nav-menu{
+    position:relative;
+    display:flex;
+    gap:4px;
+    align-items:center;
+  }
+
+  .nav-link{
+    position:relative;
+    padding:9px 16px;
+    font-size:0.74rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink);
+    border-radius:20px;
+    transition:color 0.25s ease;
+  }
+
+  .nav-link:hover{color:var(--sage-deep);}
+  .nav-link.active{color:var(--sage-deep); font-weight:600;}
+
+  .nav-bloom{
+    position:absolute;
+    bottom:-1px;
+    left:0;
+    width:18px;
+    height:18px;
+    transition:transform 0.45s cubic-bezier(.4,0,.2,1);
+    pointer-events:none;
+  }
+  .nav-bloom svg{width:100%;height:100%;}
+
+  .nav-toggle{
+    display:none;
+    background:none;
+    border:1px solid var(--gold-soft);
+    border-radius:10px;
+    width:40px;
+    height:40px;
+    cursor:pointer;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+  }
+  .nav-toggle span, .nav-toggle::before, .nav-toggle::after{
+    content:'';
+    display:block;
+    width:18px;
+    height:2px;
+    background:var(--sage-deep);
+    position:absolute;
+  }
+  .nav-toggle::before{ transform:translateY(-6px); }
+  .nav-toggle::after{ transform:translateY(6px); }
+
+  .mobile-menu{
+    position:fixed;
+    top:74px; left:0; right:0; bottom:0;
+    background:var(--cream);
+    z-index:499;
+    display:none;
+    flex-direction:column;
+    padding:30px 28px;
+    gap:2px;
+  }
+  .mobile-menu.open{display:flex;}
+  .mobile-menu a{
+    display:block;
+    border-bottom:1px solid var(--blush);
+    padding:16px 4px;
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.3rem;
+    color:var(--ink);
+  }
+  .mobile-menu a.active{color:var(--sage-deep); font-weight:600;}
+
+  @media (max-width:760px){
+    .nav-menu{display:none;}
+    .nav-toggle{display:flex;}
+  }
+
+  /* anchor targets need clearance so the fixed nav doesn't cover them on jump */
+  #home, #details, #notes, #rsvp, #dress{
+    scroll-margin-top:90px;
+  }
+
   .modal{
     display:none;
     position:fixed;
@@ -833,8 +890,118 @@
     cursor:not-allowed;
   }
 	/* =========================
-   DRESS CODE SECTION
+   SAFETY GUIDELINES SECTION
 ========================= */
+
+.safety-section{
+
+    padding:70px 24px;
+    background:linear-gradient(180deg,var(--paper),var(--cream));
+    text-align:center;
+    overflow:hidden;
+
+}
+
+.safety-section h2{
+
+    font-size:2.4rem;
+    color:var(--sage-deep);
+    margin-bottom:26px;
+
+}
+
+.safety-intro{
+
+    max-width:650px;
+    margin:0 auto 46px;
+
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.2rem;
+    line-height:1.9;
+
+}
+
+.safety-list{
+
+    max-width:700px;
+    margin:0 auto;
+
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+
+    text-align:left;
+
+}
+
+.safety-item{
+
+    display:flex;
+    align-items:flex-start;
+    gap:18px;
+
+    background:white;
+    border:1px solid var(--gold-soft);
+    border-radius:16px;
+
+    padding:22px 26px;
+
+}
+
+.safety-item .icon{
+
+    width:26px;
+    height:26px;
+    flex-shrink:0;
+    margin-top:3px;
+
+}
+
+.safety-item p{
+
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.12rem;
+    line-height:1.7;
+    color:var(--ink);
+
+}
+
+.safety-item strong{
+
+    color:var(--sage-deep);
+
+}
+
+.safety-closing{
+
+    max-width:620px;
+    margin:44px auto 0;
+
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:1.15rem;
+    line-height:1.8;
+    color:var(--sage-deep);
+
+}
+
+@media(max-width:720px){
+
+.details{ padding:48px 24px; }
+
+.notes-section{ padding:48px 24px; }
+
+.safety-section{ padding:48px 24px; }
+
+.safety-intro{ font-size:1.05rem; }
+
+.safety-item{ padding:18px 20px; gap:14px; }
+
+.safety-item p{ font-size:1rem; }
+
+.safety-closing{ font-size:1.05rem; }
+
+}
 
 .dress-section{
 
@@ -963,24 +1130,50 @@
 
 }
 
-
-.baby-photo{
-    width:100%;
-    height:100%;
-
-    object-fit:cover;
-    object-position:center;
-
-    display:block;
-
-    border-radius:50%;
 }
 </style>
 </head>
 <body>
 
+<nav class="site-nav">
+  <a href="#home" class="nav-mark">Jayden Kai</a>
+
+  <div class="nav-menu" id="navMenu">
+    <a href="#home" class="nav-link active" data-target="home">Home</a>
+    <a href="#details" class="nav-link" data-target="details">Details</a>
+    <a href="#notes" class="nav-link" data-target="notes">Notes</a>
+    <a href="#rsvp" class="nav-link" data-target="rsvp">RSVP</a>
+    <a href="#dress" class="nav-link" data-target="dress">Dress Code</a>
+    <div class="nav-bloom" id="navBloom">
+      <svg viewBox="0 0 24 24">
+        <g>
+          <circle cx="5.5" cy="6" r="3" fill="#C9A567"/>
+          <circle cx="18.5" cy="6" r="3" fill="#C9A567"/>
+          <circle cx="5.5" cy="6" r="1.3" fill="#5B6B4E" opacity="0.25"/>
+          <circle cx="18.5" cy="6" r="1.3" fill="#5B6B4E" opacity="0.25"/>
+          <circle cx="12" cy="13" r="8" fill="#D8B784"/>
+          <ellipse cx="12" cy="15.6" rx="3.6" ry="2.8" fill="#F3E6CC"/>
+          <circle cx="9" cy="11.3" r="1" fill="#3A3A33"/>
+          <circle cx="15" cy="11.3" r="1" fill="#3A3A33"/>
+          <circle cx="12" cy="14.4" r="0.9" fill="#3A3A33"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <button class="nav-toggle" id="navToggle" aria-label="Open menu"><span></span></button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#home" data-target="home" class="active">Home</a>
+  <a href="#details" data-target="details">Details</a>
+  <a href="#notes" data-target="notes">Notes</a>
+  <a href="#rsvp" data-target="rsvp">RSVP</a>
+  <a href="#dress" data-target="dress">Dress Code</a>
+</div>
+
 <!-- ============ HERO ============ -->
-<section class="hero">
+<section class="hero" id="home">
   <div class="petal-layer" id="petalLayer"></div>
 
   <svg class="leaf-corner tl" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1108,25 +1301,8 @@
   </div>
 </section>
 
-<!-- ============ PHOTO ============ -->
-<section class="photo-section">
-  <div class="photo-frame">
-
-    <img
-        src="jayden.jpg"
-        alt="Jayden Kai"
-        class="baby-photo">
-
-    <p class="photo-caption">
-        Jayden Kai
-    </p>
-
-</div>
-  <h2>"Every little step he takes fills our hearts with so much joy — thank you for walking this journey with us."</h2>
-</section>
-
 <!-- ============ DETAILS ============ -->
-<section class="details">
+<section class="details" id="details">
   <p class="eyebrow">The Details</p>
   <h2 class="serif">When &amp; Where We'll Gather</h2>
 
@@ -1174,7 +1350,7 @@
   </div>
 </section>
 
-<section class="notes-section">
+<section class="notes-section" id="notes">
 
     <p class="eyebrow">A Few Thoughtful Notes</p>
 
@@ -1239,6 +1415,68 @@
     </div>
 
 </section>
+
+<!-- ============ SAFETY GUIDELINES ============ -->
+<section class="safety-section" id="safety">
+
+    <p class="eyebrow">For Everyone's Wellbeing</p>
+
+    <h2 class="serif">A Gentle Reminder</h2>
+
+    <p class="safety-intro">
+        As we gather to celebrate Jayden's big milestones, we want every guest — especially our little ones —
+        to feel safe, comfortable, and well. We kindly ask for everyone's thoughtful cooperation with a few
+        simple considerations:
+    </p>
+
+    <div class="safety-list">
+
+        <div class="safety-item">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 20.2C12 20.2 3 15 3 8.7C3 5.6 5.5 3.5 8.1 3.5C9.9 3.5 11.2 4.5 12 6C12.8 4.5 14.1 3.5 15.9 3.5C18.5 3.5 21 5.6 21 8.7C21 15 12 20.2 12 20.2Z" stroke="#B08D57" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+            <p>With so much love in the room, we kindly ask that <strong>no one kiss Jayden</strong> directly — a warm hug, a gentle hand squeeze, or a wave means just as much to him.</p>
+        </div>
+
+        <div class="safety-item">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="5" width="18" height="16" rx="2" stroke="#B08D57" stroke-width="1.5"/>
+                <path d="M3 9H21" stroke="#B08D57" stroke-width="1.5"/>
+            </svg>
+            <p>If you're <strong>feeling under the weather</strong>, please don't feel obligated to attend — we completely understand, and we'd love to celebrate with you another time very soon.</p>
+        </div>
+
+        <div class="safety-item">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="9" stroke="#B08D57" stroke-width="1.5"/>
+                <path d="M8 8L16 16M16 8L8 16" stroke="#B08D57" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <p>To keep the air comfortable for our youngest guests, we kindly ask for <strong>no smoking</strong> within the venue.</p>
+        </div>
+
+        <div class="safety-item">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C12 2 7 8 7 13C7 15.7614 9.23858 18 12 18C14.7614 18 17 15.7614 17 13C17 8 12 2 12 2Z" stroke="#B08D57" stroke-width="1.5"/>
+            </svg>
+            <p>Hand sanitizer will be available at the venue — a quick pump before holding Jayden means the world to us.</p>
+        </div>
+
+        <div class="safety-item">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="9" stroke="#B08D57" stroke-width="1.5"/>
+                <path d="M12 7V12L15.5 14" stroke="#B08D57" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <p>And if you get a chance to hold him, we'd appreciate <strong>avoiding his little hands and face</strong> as much as possible.</p>
+        </div>
+
+    </div>
+
+    <p class="safety-closing">
+        We know these are small things, but they mean so much to us as new parents.
+        Thank you for loving Jayden enough to help keep him safe and healthy. 💛
+    </p>
+
+</section>
 <!-- ============ RSVP ============ -->
 <section class="rsvp-section" id="rsvp">
   <p class="eyebrow">Please Respond</p>
@@ -1274,7 +1512,7 @@
 </section>
 
 	<!-- ============ DRESS CODE ============ -->
-<section class="dress-section">
+<section class="dress-section" id="dress">
 
     <p class="eyebrow">Dress Code</p>
 
@@ -1457,8 +1695,59 @@ notesViewport.addEventListener("mouseleave", ()=>{ if(isDragging) dragEnd(); });
 startSlider();
 
 /* =========================================================
-   RECIPIENT / INVITE CODE
+   ANCHOR NAV: scrollspy + mobile menu + bloom indicator
    ========================================================= */
+const navLinks = document.querySelectorAll('.nav-link');
+const mobileLinks = document.querySelectorAll('.mobile-menu a');
+const navMenu = document.getElementById('navMenu');
+const navBloom = document.getElementById('navBloom');
+const navToggle = document.getElementById('navToggle');
+const mobileMenu = document.getElementById('mobileMenu');
+const navSections = ['home','details','notes','rsvp','dress']
+  .map(id => document.getElementById(id))
+  .filter(Boolean);
+
+function setActiveNav(id){
+  navLinks.forEach(link => {
+    const isActive = link.dataset.target === id;
+    link.classList.toggle('active', isActive);
+    if(isActive) positionBloom(link);
+  });
+  mobileLinks.forEach(link => link.classList.toggle('active', link.dataset.target === id));
+}
+
+function positionBloom(activeLink){
+  if(!activeLink || window.innerWidth <= 760) return;
+  const menuRect = navMenu.getBoundingClientRect();
+  const linkRect = activeLink.getBoundingClientRect();
+  const x = linkRect.left - menuRect.left + (linkRect.width / 2) - 9;
+  navBloom.style.transform = `translateX(${x}px)`;
+}
+
+if('IntersectionObserver' in window && navSections.length){
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        setActiveNav(entry.target.id);
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+
+  navSections.forEach(section => sectionObserver.observe(section));
+}
+
+navToggle.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+mobileLinks.forEach(link => link.addEventListener('click', () => mobileMenu.classList.remove('open')));
+
+window.addEventListener('resize', () => {
+  positionBloom(document.querySelector('.nav-link.active'));
+});
+
+window.addEventListener('load', () => {
+  positionBloom(document.querySelector('.nav-link.active'));
+});
+
+
 const params = new URLSearchParams(window.location.search);
 const inviteCode = params.get("code");
 let invitation = null;
