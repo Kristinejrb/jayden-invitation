@@ -185,14 +185,15 @@ const SUPABASE_URL =
 const SUPABASE_ANON_KEY =
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwcmp3YmRuemxsbWdsd2pibGxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1MDQxODEsImV4cCI6MjA5OTA4MDE4MX0.ZhIIU8_M_Ff1bzBePaC-3lkekdXEkJ727qjP5wWm3j0";
 
-// Create client correctly
+const { createClient } = window.supabase;
+
 const supabaseClient =
-supabase.createClient(
+createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
 );
 
-async function login(){
+async function login() {
 
     const email =
         document.getElementById("email").value.trim();
@@ -207,40 +208,59 @@ async function login(){
         document.getElementById("error");
 
     errorDiv.style.display = "none";
-    errorDiv.innerHTML = "";
+    errorDiv.textContent = "";
+
+    if (!email || !password) {
+        errorDiv.textContent =
+            "Please enter email and password";
+        errorDiv.style.display = "block";
+        return;
+    }
 
     loading.style.display = "block";
 
-    try{
+    try {
 
-        const { data, error } =
-            await supabaseClient.auth.signInWithPassword({
-                email,
-                password
-            });
+        const {
+            data,
+            error
+        } = await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+        });
 
         loading.style.display = "none";
 
-        if(error){
-            errorDiv.innerHTML = error.message;
-            errorDiv.style.display = "block";
+        if (error) {
+
+            errorDiv.textContent =
+                error.message;
+
+            errorDiv.style.display =
+                "block";
+
+            console.error(error);
+
             return;
         }
 
-        console.log("Logged in:", data);
+        console.log("LOGIN SUCCESS");
+        console.log(data);
 
-        window.location.href =
-            "/dashboard/index.html";
+        window.location.replace(
+            "/dashboard/index.html"
+        );
 
     }
-    catch(err){
+    catch (err) {
 
         loading.style.display = "none";
 
-        errorDiv.innerHTML =
-            err.message || "Unexpected error";
+        errorDiv.textContent =
+            err.message;
 
-        errorDiv.style.display = "block";
+        errorDiv.style.display =
+            "block";
 
         console.error(err);
 
@@ -249,25 +269,37 @@ async function login(){
 
 document.addEventListener(
     "keydown",
-    function(e){
-
-        if(e.key === "Enter"){
+    e => {
+        if (e.key === "Enter") {
             login();
         }
-
     }
 );
 
-// If already logged in
 (async () => {
 
-    const {
-        data: { session }
-    } = await supabaseClient.auth.getSession();
+    try {
 
-    if(session){
-        window.location.href =
-            "/dashboard/index.html";
+        const {
+            data: { session }
+        } =
+        await supabaseClient.auth.getSession();
+
+        console.log("SESSION:", session);
+
+        if (session) {
+
+            window.location.replace(
+                "/dashboard/index.html"
+            );
+
+        }
+
+    }
+    catch(err) {
+
+        console.error(err);
+
     }
 
 })();
