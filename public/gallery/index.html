@@ -198,6 +198,17 @@ document
     .getElementById("lightbox")
     .classList
     .remove("show");
+const lightbox = document.getElementById("lightbox");
+const lightboxImage = document.getElementById("lightboxImage");
+
+function openLightbox(url) {
+    lightboxImage.src = url;
+    lightbox.classList.add("show");
+}
+
+lightbox.addEventListener("click", () => {
+    lightbox.classList.remove("show");
+});
 });
 
 </script>
