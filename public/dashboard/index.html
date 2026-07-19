@@ -758,7 +758,7 @@ async function deleteGuest(id) {
 }
 
 function copyLink(inviteCode) {
-  const link = `${window.location.origin}/?code=${inviteCode}`;
+  const link = `${window.location.origin}/invitation/?code=${inviteCode}`;
   navigator.clipboard.writeText(link);
   alert("Invitation link copied");
 }
