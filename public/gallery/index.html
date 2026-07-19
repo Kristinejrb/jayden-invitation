@@ -153,35 +153,39 @@ document.getElementById("loading");
 
 async function loadPhotos() {
 
-    const testImages = [
+    console.log("Starting loadPhotos...");
 
-        "20260716_135342 - Copy.jpg"
+    const { data, error } = await supabaseClient.storage
+        .from("Photoshoot")
+        .list();
 
-        // Add more filenames here
-        // "photo2.jpg",
-        // "photo3.jpg"
+    console.log("DATA:", data);
+    console.log("ERROR:", error);
 
-    ];
+    if (error) {
+        loading.innerHTML =
+            "ERROR: " + JSON.stringify(error);
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        loading.innerHTML =
+            "No photos returned from Supabase.";
+        return;
+    }
 
     loading.style.display = "none";
 
-    testImages.forEach(filename => {
+    data.forEach(file => {
 
         const imageUrl =
-            `https://rprjwbdnzllmglwjbllg.supabase.co/storage/v1/object/public/Photoshoot/${encodeURIComponent(filename)}`;
+            `${SUPABASE_URL}/storage/v1/object/public/Photoshoot/${encodeURIComponent(file.name)}`;
 
         const card = document.createElement("div");
         card.className = "photo-card";
 
-        const img = document.createElement("img");
-        img.src = imageUrl;
-        img.loading = "lazy";
-
-        card.appendChild(img);
-
-        card.addEventListener("click", () => {
-            openLightbox(imageUrl);
-        });
+        card.innerHTML =
+            `<img src="${imageUrl}" loading="lazy">`;
 
         gallery.appendChild(card);
 
