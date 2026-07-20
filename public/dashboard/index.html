@@ -505,6 +505,7 @@ td{
           <tr>
             <th>Recipient Name</th>
             <th># Guests</th>
+            <th>Attending</th>
             <th>Invitation Link</th>
             <th>Actions</th>
           </tr>
@@ -618,29 +619,86 @@ async function loadDashboard() {
    DASHBOARD: cards, ring, doughnut
    ========================================================= */
 function computeCounts() {
+
   let totalGuests = 0;
-  allInvitations.forEach(i => { totalGuests += Number(i.allowed_guest || 0); });
+  let confirmedGuests = 0;
+  let notAttendingGuests = 0;
 
-  const confirmed = allRsvp.filter(x => !x.not_attending).length;
-  const notAttending = allRsvp.filter(x => x.not_attending).length;
-  const pending = Math.max(allInvitations.length - confirmed - notAttending, 0);
+  allInvitations.forEach(invitation => {
 
-  return { totalGuests, confirmed, notAttending, pending };
+    const guestCount = Number(invitation.allowed_guest || 0);
+
+    totalGuests += guestCount;
+
+    if (invitation.attending === true) {
+      confirmedGuests += guestCount;
+    }
+
+    if (invitation.attending === false &&
+        invitation.email &&
+        invitation.email.trim() !== '') {
+      notAttendingGuests += guestCount;
+    }
+
+  });
+
+  const pendingGuests =
+    totalGuests -
+    confirmedGuests -
+    notAttendingGuests;
+
+  return {
+    totalGuests,
+    confirmedGuests,
+    notAttendingGuests,
+    pendingGuests
+  };
 }
 
 function renderSummary() {
-  const { totalGuests, confirmed, notAttending, pending } = computeCounts();
-  document.getElementById("totalGuests").textContent = totalGuests;
-  document.getElementById("confirmedGuests").textContent = confirmed;
-  document.getElementById("notAttendingGuests").textContent = notAttending;
-  document.getElementById("pendingGuests").textContent = pending;
+
+  const {
+    totalGuests,
+    confirmedGuests,
+    notAttendingGuests,
+    pendingGuests
+  } = computeCounts();
+
+  document.getElementById("totalGuests").textContent =
+    totalGuests;
+
+  document.getElementById("confirmedGuests").textContent =
+    confirmedGuests;
+
+  document.getElementById("notAttendingGuests").textContent =
+    notAttendingGuests;
+
+  document.getElementById("pendingGuests").textContent =
+    pendingGuests;
 }
 
 function renderProgressRing() {
-  const { confirmed, notAttending } = computeCounts();
-  const total = allInvitations.length;
-  const responded = confirmed + notAttending;
-  const pct = total > 0 ? Math.round((responded / total) * 100) : 0;
+
+  const totalGuests =
+    allInvitations.reduce(
+      (sum, i) => sum + Number(i.allowed_guest || 0),
+      0
+    );
+
+  const respondedGuests =
+    allInvitations
+      .filter(i => i.email)
+      .reduce(
+        (sum, i) => sum + Number(i.allowed_guest || 0),
+        0
+      );
+
+  const pct =
+    totalGuests > 0
+      ? Math.round(
+          (respondedGuests / totalGuests) * 100
+        )
+      : 0;
 
   const fill = document.getElementById('progressRingFill');
   fill.style.strokeDasharray = `${RING_CIRCUMFERENCE}`;
@@ -650,13 +708,21 @@ function renderProgressRing() {
 }
 
 function renderDoughnut() {
-  const { confirmed, notAttending, pending } = computeCounts();
+  const {
+  confirmedGuests,
+  notAttendingGuests,
+  pendingGuests
+  } = computeCounts();
   const ctx = document.getElementById('statusDoughnut').getContext('2d');
 
   const data = {
     labels: ['Confirmed', 'Pending', 'Not Attending'],
     datasets: [{
-      data: [confirmed, pending, notAttending],
+      data: [
+        confirmedGuests,
+        pendingGuests,
+        notAttendingGuests
+      ],
       backgroundColor: ['#5B6B4E', '#DCC7A0', '#D9534F'],
       borderWidth: 0,
     }]
@@ -698,7 +764,19 @@ function renderInvitationsTable() {
   tbody.innerHTML = filtered.map(row => `
     <tr>
       <td>${escapeHtml(row.recipient_name)}</td>
+    
       <td>${row.allowed_guest}</td>
+    
+      <td>
+        ${
+          row.email
+            ? row.attending
+              ? '<span class="status-pill status-confirmed">Yes</span>'
+              : '<span class="status-pill status-not-attending">No</span>'
+            : '<span class="status-pill">Pending</span>'
+        }
+      </td>
+    
       <td>
         <button class="action-btn copy" onclick="copyLink('${escapeAttr(row.invite_code)}')">Copy Link</button>
       </td>
