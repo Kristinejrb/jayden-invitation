@@ -122,6 +122,29 @@ footer .fine-print{margin-top:30px;font-size:.68rem;letter-spacing:.05em;color:v
 .note-card{padding:36px 24px}.note-card h3{font-size:1.7rem}.note-card p{font-size:1.05rem}
 .details,.notes-section,.safety-section{padding:48px 24px}.safety-intro{font-size:1.05rem}.safety-item{padding:18px 20px;gap:14px}.safety-item p{font-size:1rem}.safety-closing{font-size:1.05rem}
 .dress-section{padding:90px 24px}.dress-description{font-size:1.1rem}.dress-palette{gap:20px}.dress-color span{width:58px;height:58px}.dress-note{padding:18px}}
+
+/* ---------- Generic page (invalid / missing invitation link) ---------- */
+#genericPage{display:none;background:var(--cream)}
+body.generic>*:not(#genericPage){display:none!important}
+body.generic #genericPage{display:block}
+.gp-hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 24px 70px;background:radial-gradient(circle at 50% 15%,rgba(220,199,160,.18),transparent 55%),radial-gradient(circle at 10% 90%,rgba(233,216,201,.5),transparent 50%),linear-gradient(180deg,var(--cream),var(--paper))}
+.gp-teaser{font-size:.75rem;letter-spacing:.35em;text-transform:uppercase;color:var(--sage-deep);margin-bottom:22px}
+.gp-name{font-size:clamp(3rem,9vw,5.6rem);color:var(--sage-deep);line-height:1;margin-bottom:30px}
+.gp-line{font-family:'Cormorant Garamond',serif;font-size:1.15rem;line-height:1.9;max-width:520px;color:var(--ink);margin-bottom:36px;font-style:italic}
+.gp-line .highlight{color:var(--sage-deep);font-style:normal;font-weight:600}
+.gp-divider{width:60px;height:1px;background:var(--gold-soft);margin:0 auto 32px}
+.gp-note{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.8;color:var(--sage-deep);max-width:440px}
+.gp-dress{padding:90px 24px;background:var(--paper);text-align:center}
+.gp-eyebrow{font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.gp-dress h2{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--sage-deep);margin-bottom:26px}
+.gp-dress>p.gp-text{max-width:480px;margin:0 auto 34px;font-family:'Cormorant Garamond',serif;font-size:1.1rem;line-height:1.8;color:var(--ink)}
+.gp-palette{display:flex;justify-content:center;flex-wrap:wrap;gap:22px}
+.gp-color span{display:block;width:48px;height:48px;border-radius:50%;border:4px solid #fff;box-shadow:0 6px 16px rgba(0,0,0,.08),0 0 0 1px rgba(176,141,87,.2);margin:0 auto 8px}
+.gp-color p{font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--sage-deep)}
+.gp-foot{padding:60px 24px 50px;text-align:center;background:var(--blush)}
+.gp-foot .script{font-size:2.2rem;color:var(--sage-deep);display:block;margin-bottom:14px}
+.gp-foot p{font-size:.85rem;color:var(--ink);max-width:420px;margin:0 auto}
+@media(max-width:600px){.gp-name{font-size:2.6rem}}
 </style></head>
 <body>
 <nav class="site-nav"><a href="#home" class="nav-mark">Jayden Kai</a>
@@ -192,6 +215,16 @@ footer .fine-print{margin-top:30px;font-size:.68rem;letter-spacing:.05em;color:v
 <div id="declineEmailWrap"><input type="email" id="declineEmail" placeholder="Email Address"></div><textarea id="declineReason" rows="5" placeholder="Reason (optional but appreciated)"></textarea>
 <div class="modal-buttons"><button id="cancelDecline" type="button">Close</button><button id="submitDecline" type="button">Submit</button></div></div></div>
 
+<div id="genericPage">
+<section class="gp-hero"><p class="gp-teaser">A little sneak peek, just for you</p><h1 class="gp-name script">Jayden Kai Alla</h1>
+<p class="gp-line">We're so excited to share that we'll soon be celebrating our son's <span class="highlight">first birthday and baptism</span> — and we couldn't wait to give you a little sneak peek.</p>
+<div class="gp-divider"></div><p class="gp-note">Your private invitation link has all the details — please check it and confirm your RSVP there.</p></section>
+<section class="gp-dress"><p class="gp-eyebrow">A Little Preview</p><h2 class="serif">Garden Elegance</h2>
+<p class="gp-text">We're dressing the celebration in soft, elegant, earthy tones — here's a peek at the palette.</p>
+<div class="gp-palette"><div class="gp-color"><span style="background:#F7F3EC"></span><p>Cream</p></div><div class="gp-color"><span style="background:#E9D8C9"></span><p>Blush</p></div><div class="gp-color"><span style="background:#D8C7A7"></span><p>Champagne</p></div><div class="gp-color"><span style="background:#B7C2A4"></span><p>Sage</p></div><div class="gp-color"><span style="background:#93A17E"></span><p>Olive</p></div></div></section>
+<div class="gp-foot"><span class="script">With love,</span><p>The Alla Family can't wait to celebrate this beautiful day with you.</p></div>
+</div>
+
 <script>
 const $=id=>document.getElementById(id);
 const reveal=()=>document.documentElement.classList.remove('gate-pending');
@@ -249,6 +282,9 @@ tick();setInterval(tick,1000);
 if(!matchMedia('(prefers-reduced-motion: reduce)').matches){const layer=$('petalLayer');
   for(let i=0;i<10;i++){const p=document.createElement('div');p.className='petal';p.style.left=Math.random()*100+'%';const du=14+Math.random()*10;p.style.animationDuration=du+'s';p.style.animationDelay=Math.random()*du+'s';p.style.width=p.style.height=(10+Math.random()*8)+'px';layer.appendChild(p);}}
 
+/* ---------- Generic page for invalid / missing links ---------- */
+function showGeneric(){document.body.classList.add('generic');scrollTo(0,0);}
+
 /* ---------- Closed mode: details hidden for declined / no-reply guests ---------- */
 function showClosed(msg){
   ['#details','#notes','#safety','#rsvp','#dress','.event-pill','.venue-line','.scroll-cue','.nav-menu','.nav-toggle','.mobile-menu','footer .contact + .contact']
@@ -283,9 +319,9 @@ function renderStatus(){
 
 /* ---------- Load invitation + existing RSVP ---------- */
 async function loadInvitation(){
-  if(!inviteCode){$('recipientName').textContent="Invitation Link Invalid";rsvpBtn.disabled=true;declineBtn.style.display='none';return;}
+  if(!inviteCode){$('recipientName').textContent="Invitation Link Invalid";rsvpBtn.disabled=true;declineBtn.style.display='none';showGeneric();return;}
   const {data,error}=await sb.from("invitations").select("*").eq("invite_code",inviteCode).single();
-  if(error){console.error(error);$('recipientName').textContent="Invitation Not Found";rsvpBtn.disabled=true;declineBtn.style.display='none';return;}
+  if(error){console.error(error);$('recipientName').textContent="Invitation Not Found";rsvpBtn.disabled=true;declineBtn.style.display='none';showGeneric();return;}
   invitation=data;
   $('recipientName').textContent=`${invitation.recipient_name} (${invitation.allowed_guest} Guest${invitation.allowed_guest>1?'s':''})`;
   const {data:existing}=await sb.from("rsvp").select("*").eq("invite_code",inviteCode).maybeSingle();
