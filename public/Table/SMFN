@@ -1,1 +1,10 @@
 
+<div class="pdf-container">
+  <iframe
+    src="/SMFN.pdf"
+    width="100%"
+    height="800"
+    style="border:none;"
+    title="Invitation PDF">
+  </iframe>
+</div>
