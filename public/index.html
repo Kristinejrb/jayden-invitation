@@ -32,7 +32,7 @@
   .script{font-family:'Alex Brush',cursive;}
   .serif{font-family:'Cormorant Garamond',serif;}
 
-  /* ---------- HERO (light throughout, matching the live site's proven contrast) ---------- */
+  /* ---------- HERO ---------- */
   .hero{
     position:relative;
     min-height:100vh;
@@ -54,14 +54,6 @@
     text-transform:uppercase;
     color:var(--sage-deep);
     margin-bottom:22px;
-  }
-
-  .celebrate-of{
-    font-size:0.78rem;
-    letter-spacing:0.3em;
-    text-transform:uppercase;
-    color:var(--sage);
-    margin-bottom:6px;
   }
 
   .baby-name{
@@ -87,43 +79,23 @@
     font-weight:600;
   }
 
-  .event-pill{
-    display:inline-flex;
-    gap:14px;
-    align-items:center;
-    background:var(--sage-deep);
-    color:var(--cream);
-    padding:14px 30px;
-    border-radius:40px;
-    font-size:0.85rem;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    box-shadow:0 8px 24px rgba(91,107,78,0.2);
-    margin-bottom:20px;
-    flex-wrap:wrap;
-    justify-content:center;
+  .divider{
+    width:60px;
+    height:1px;
+    background:var(--gold-soft);
+    margin:0 auto 32px;
   }
-
-  .event-pill .dot{opacity:0.5;}
-
-  .venue-line{
-    font-size:0.95rem;
-    letter-spacing:0.04em;
-    color:var(--ink);
-    margin-bottom:50px;
-  }
-
-  .venue-line strong{color:var(--sage-deep);}
 
   .formal-note{
     font-family:'Cormorant Garamond',serif;
     font-style:italic;
-    font-size:1.05rem;
+    font-size:1.1rem;
+    line-height:1.8;
     color:var(--sage-deep);
-    max-width:420px;
+    max-width:440px;
   }
 
-  /* ---------- Dress code teaser (light card, same as main site) ---------- */
+  /* ---------- Dress code teaser ---------- */
   .dress-teaser{
     padding:90px 24px;
     background:var(--paper);
@@ -178,7 +150,7 @@
     margin:0;
   }
 
-  /* ---------- Footer: light band, not dark, to avoid any repeat of the contrast issue ---------- */
+  /* ---------- Footer ---------- */
   footer{
     padding:60px 24px 50px;
     text-align:center;
@@ -196,22 +168,13 @@
 
 <section class="hero">
   <p class="teaser-line">A little sneak peek, just for you</p>
-<!--
-  <p class="celebrate-of">In loving celebration of</p>
--->
   <h1 class="baby-name script">Jayden Kai Alla</h1>
 
   <p class="invite-line">We're so excited to share that we'll soon be celebrating our son's <span class="highlight">first birthday and baptism</span> — and we couldn't wait to give you a little sneak peek.</p>
 
-  <div class="event-pill">
-    <span>Tuesday, October 13, 2026</span>
-    <span class="dot">•</span>
-    <span>11:00 AM</span>
-  </div>
+  <div class="divider"></div>
 
-  <p class="venue-line">at <strong>Sage Garden Cafe &amp; Restaurant</strong></p>
-
-  <p class="formal-note">A formal invitation with all the details will be on its way to you soon!</p>
+  <p class="formal-note">Your private invitation link has all the details — please check it and confirm your RSVP there.</p>
 </section>
 
 <section class="dress-teaser">
