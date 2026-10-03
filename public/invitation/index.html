@@ -123,6 +123,8 @@ footer .fine-print{margin-top:30px;font-size:.68rem;letter-spacing:.05em;color:v
 .details,.notes-section,.safety-section{padding:48px 24px}.safety-intro{font-size:1.05rem}.safety-item{padding:18px 20px;gap:14px}.safety-item p{font-size:1rem}.safety-closing{font-size:1.05rem}
 .dress-section{padding:90px 24px}.dress-description{font-size:1.1rem}.dress-palette{gap:20px}.dress-color span{width:58px;height:58px}.dress-note{padding:18px}}
 
+.seat-btn{display:none;position:relative;z-index:2;margin-top:22px;background:var(--gold);color:#2E3625;font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:.8rem;padding:15px 38px;border-radius:40px;box-shadow:0 10px 26px rgba(176,141,87,.35);transition:transform .25s ease,box-shadow .25s ease}
+.seat-btn:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(176,141,87,.45)}
 /* ---------- Generic page (invalid / missing invitation link) ---------- */
 #genericPage{display:none;background:var(--cream)}
 body.generic>*:not(#genericPage){display:none!important}
@@ -172,6 +174,7 @@ body.generic #genericPage{display:block}
 <h1 class="baby-name script">Jayden Kai Alla</h1>
 <div class="event-pill"><span>Tuesday, October 13, 2026</span><span class="dot">•</span><span>11:00 AM</span></div>
 <p class="venue-line">at <strong>Sage Garden Cafe &amp; Restaurant</strong></p>
+<a class="seat-btn" id="seatBtn" href="#" target="_blank" rel="noopener">Find Your Seat</a>
 <div class="scroll-cue"><span>Scroll to see more</span><span>↓</span></div></section>
 
 <section class="details" id="details"><p class="eyebrow">The Details</p><h2 class="serif">When &amp; Where We'll Gather</h2>
@@ -237,6 +240,7 @@ const inviteCode=new URLSearchParams(location.search).get("code");
 const targetDate=new Date("2026-10-13T11:00:00");
 const RSVP_DEADLINE=new Date("2026-08-13T00:00:00");
 const isRsvpClosed=()=>new Date()>=RSVP_DEADLINE;
+const SEAT_CONFIRMED_ONLY=false; // true = show "Find Your Seat" only to guests who confirmed
 let invitation=null,rsvpRecord=null,stage='initial',declineMode='decline';
 
 const MSG_DECLINED="It's sad that we can't have you at this very special milestone of our little Jayden Kai, but we're still so excited for you to meet our little boy soon. Thank you for letting us know — we'll be thinking of you on the day. 💛";
@@ -287,14 +291,25 @@ function showGeneric(){document.body.classList.add('generic');scrollTo(0,0);}
 
 /* ---------- Closed mode: details hidden for declined / no-reply guests ---------- */
 function showClosed(msg){
-  ['#details','#notes','#safety','#rsvp','#dress','.event-pill','.venue-line','.scroll-cue','.nav-menu','.nav-toggle','.mobile-menu','footer .contact + .contact']
+  ['#details','#notes','#safety','#rsvp','#dress','.event-pill','.venue-line','.scroll-cue','.seat-btn','.nav-menu','.nav-toggle','.mobile-menu','footer .contact + .contact']
     .forEach(s=>document.querySelectorAll(s).forEach(el=>el.style.display='none'));
   const line=document.querySelector('.hero .invite-line');if(line)line.innerHTML=msg;
   scrollTo(0,0);
 }
 
+/* ---------- Find Your Seat button (link comes from invitations."Table") ---------- */
+function updateSeat(){
+  const btn=$('seatBtn');
+  let v=invitation?(invitation.Table??invitation.table??''):'';v=String(v).trim();
+  if(!v){btn.style.display='none';return;}
+  btn.href=v.toLowerCase().startsWith('http')?v:'https://'+v.replace(/^[/]+/,'');
+  const ok=!SEAT_CONFIRMED_ONLY||(rsvpRecord&&rsvpRecord.not_attending===false);
+  btn.style.display=ok?'inline-block':'none';
+}
+
 /* ---------- Render UI from rsvpRecord ---------- */
 function renderStatus(){
+  updateSeat();
   if(!rsvpRecord){
     rsvpBox.style.display='';rsvpSuccess.classList.remove('show');
     declineBtn.style.display='inline-block';declineBtn.textContent="With regret, I won't be able to attend";rsvpNote.style.display='';
